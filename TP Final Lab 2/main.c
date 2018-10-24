@@ -109,7 +109,10 @@ typedef struct
 ///---------------------------------------- TDA ARBOL --------------------------------------------
 
 //inicArbol()
-
+nodoArbolPelicula* inicArbol ()
+{
+    return NULL;
+}
 
 //crearNodoArbol()
 
