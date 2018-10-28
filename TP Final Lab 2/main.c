@@ -90,7 +90,6 @@ typedef struct
 
 //crearNodoLista()
 
-
 //agregarAlPrincipio()
 
 
@@ -115,12 +114,81 @@ nodoArbolPelicula* inicArbol ()
 }
 
 //crearNodoArbol()
+nodoArbolPelicula* crearNodoArbol(stPelicula pelicula)
+{
+    nodoArbolPelicula* aux=(nodoArbolPelicula*) malloc(sizeof(nodoArbolPelicula));
 
+    aux->p=pelicula;
+    aux->der=NULL;
+    aux->izq=NULL;
+
+    return aux;
+}
 
 //insertarNodoArbol (ordenado por idPelicula)
-
+nodoArbolPelicula* insertarNodoArbol (nodoArbolPelicula* arbol, stPelicula nuevo )
+{
+    if(arbol==NULL)
+    {
+        arbol = crearNodoArbol(nuevo);
+    }
+    else
+    {
+        if(nuevo.idPelicula>arbol->p.idPelicula)
+        {
+            arbol->der=insertarNodoArbol(arbol->der,nuevo);
+        }
+        else
+        {
+            arbol->izq=insertarNodoArbol(arbol->izq, nuevo);
+        }
+    }
+    return arbol;
+}
 
 //mostrarArbol (son tres funciones, recorriendo inOrder, postOrder, preOrder)
+///Aca tambien podria usarse el modulo que tiene la numeracion de la pelicula
+void mostrarPelicula(stPelicula aux) ///Muestra el contenido de una pelicula
+{
+    printf("ID: %i \n",aux.idPelicula);
+    printf("Nombre: %s \n",aux.nombrePelicula);
+    printf("Director: %s \n",aux.director);
+    printf("Genero: %s \n",aux.genero);
+    printf("Pais: %s \n",aux.pais);
+    printf("Anio: %i \n",aux.anio);
+    printf("Valoracion: %i \n",aux.valoracion);
+    printf("PM: %i \n",aux.pm);
+    printf("Eliminado: %i \n\n",aux.eliminado);
+}
+
+void Recorriendo_preorder (nodoArbolPelicula*arbol)
+{
+    if(arbol!=NULL)
+    {
+        mostrarPelicula(arbol->p);
+        Recorriendo_preorder(arbol->izq);
+        Recorriendo_preorder(arbol->der);
+    }
+}
+
+void Recorriendo_inorder ( nodoArbolPelicula*arbol)
+{
+    if(arbol!=NULL)
+    {
+        Recorriendo_inorder(arbol->izq);
+        mostrarPelicula(arbol->p);
+        Recorriendo_inorder(arbol->der);
+    }
+}
+void Recorriendo_postorder (nodoArbolPelicula * arbol)
+{
+    if(arbol!=NULL)
+    {
+        Recorriendo_postorder(arbol->izq);
+        Recorriendo_postorder(arbol->der);
+        mostrarPelicula(arbol->p);
+    }
+}
 
 
 //borrarUnNodoArbol (buscarlo por idPelicula)
@@ -198,16 +266,16 @@ int main()
 
         case 1:  ///ENTRAR ===================================================================================
 
-           /* while(userValido == 0)
+            /* while(userValido == 0)
+             {
+                 userValido = validacionUser();
+             }
+             if(userValido == 1) */
+        {
+            while(continuarOpcionesUser=='s')
             {
-                userValido = validacionUser();
-            }
-            if(userValido == 1) */
-            {
-                while(continuarOpcionesUser=='s')
-                {
 
-                    ///reseteamos las variables para poder utilizar la funcion volver en el switch
+                ///reseteamos las variables para poder utilizar la funcion volver en el switch
                 continuarOpcionesAdmin ='s';
                 continuarOpcionesAdminPeliculas ='s';
                 continuarOpcionesAdminUsers ='s';
@@ -215,80 +283,80 @@ int main()
 
 
 
-                    printf("1.PERFIL \n");
+                printf("1.PERFIL \n");
 
-                    printf("2.PELICULAS \n");
+                printf("2.PELICULAS \n");
 
-                    printf("3.VER \n");
+                printf("3.VER \n");
 
-                    printf("4.RECOMENDACIONES \n");
+                printf("4.RECOMENDACIONES \n");
 
-                    printf("5.HISTORIAL \n");
+                printf("5.HISTORIAL \n");
 
-                    printf("6.SALIR \n");
+                printf("6.SALIR \n");
 
-                    printf("ELIJA OPCION \n");
+                printf("ELIJA OPCION \n");
 
-                    scanf("%d",&respuestaOpcionesUser);
+                scanf("%d",&respuestaOpcionesUser);
 
-                    system("cls");
+                system("cls");
 
-                    switch(respuestaOpcionesUser)
-                    {
+                switch(respuestaOpcionesUser)
+                {
 
-                    case 1: ///PERFIL
+                case 1: ///PERFIL
 
-                        ///IMPRIME INFORMACION DEL USUARIO
-                        break;
+                    ///IMPRIME INFORMACION DEL USUARIO
+                    break;
 
-                    case 2: ///PELICULAS
+                case 2: ///PELICULAS
 
-                        ///SWITCH CON 2 OPCIONES TITULO O GENERO LUEGO MUESTRA LAS PELICULAS ORDENADAS
+                    ///SWITCH CON 2 OPCIONES TITULO O GENERO LUEGO MUESTRA LAS PELICULAS ORDENADAS
 
-                        break;
+                    break;
 
-                    case 3: /// VER
+                case 3: /// VER
 
-                        ///FUNCION PARA ELEJIR UNA PELICULA Y VERLA, PODRIA ESTAR ADENTRO DE LA FUNCION ANTERIOR(A DEBATIR)
+                    ///FUNCION PARA ELEJIR UNA PELICULA Y VERLA, PODRIA ESTAR ADENTRO DE LA FUNCION ANTERIOR(A DEBATIR)
 
-                        break;
+                    break;
 
-                    case 4: /// RECOMENDACIONES
+                case 4: /// RECOMENDACIONES
 
-                        ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
+                    ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
 
-                        break;
+                    break;
 
-                    case 5: /// HISTORIAL
+                case 5: /// HISTORIAL
 
-                        /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
+                    /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
 
-                        break;
+                    break;
 
-                    case 6: /// Vuelve al menu anterior
+                case 6: /// Vuelve al menu anterior
 
-                        continuarOpcionesUser= 'n';
-
-
-
-                        break;
+                    continuarOpcionesUser= 'n';
 
 
-                    default:
 
-                        printf("opcion invalida\n");
+                    break;
 
-                        break;
-                    }
+
+                default:
+
+                    printf("opcion invalida\n");
+
+                    break;
                 }
-
             }
 
+        }
 
 
 
 
-            break;
+
+        break;
         ///==================================================================================================
 
 
@@ -300,9 +368,9 @@ int main()
 
 
 
-                /* while(adminValido == 0)
+            /* while(adminValido == 0)
             {
-                adminValido = validacionAdmin();
+            adminValido = validacionAdmin();
             }
             if(adminValido == 1) */
 
@@ -372,13 +440,13 @@ int main()
 
                             break;
 
-                            case 6: /// Vuelve al menu anterior
+                        case 6: /// Vuelve al menu anterior
 
-                        continuarOpcionesAdminPeliculas= 'n';
+                            continuarOpcionesAdminPeliculas= 'n';
 
 
 
-                        break;
+                            break;
 
                         default:
 
@@ -454,7 +522,7 @@ int main()
 
                 case 3:
                     continuarOpcionesAdmin = 'n';
-                break;
+                    break;
 
 
 
