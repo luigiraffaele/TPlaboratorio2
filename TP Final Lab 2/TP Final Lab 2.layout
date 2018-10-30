@@ -4,8 +4,8 @@
 	<ActiveTarget name="Release" />
 	<File name="main.c" open="1" top="1" tabpos="1" split="2" active="2" splitpos="661" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1571" topLine="468" />
-			<Cursor2 position="7806" topLine="341" />
+			<Cursor1 position="1571" topLine="395" />
+			<Cursor2 position="8552" topLine="341" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

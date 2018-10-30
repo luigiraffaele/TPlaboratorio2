@@ -348,33 +348,32 @@ void mostrarPelicula(stPelicula aux) ///Muestra el contenido de una pelicula
 
 void Recorriendo_preorder (nodoArbolPelicula*arbol)
 {
-    if(arbol!=NULL)
-    {
-        mostrarPelicula(arbol->p);
-        preorder(arbol->izq);
-        preorder(arbol->der);
-    }
+if(arbol!=NULL)
+{
+mostrarPelicula(arbol->p);
+Recorriendo_preorder(arbol->izq);
+Recorriendo_preorder(arbol->der);
+}
 }
 
 void Recorriendo_inorder ( nodoArbolPelicula*arbol)
 {
-    if(arbol!=NULL)
-    {
-        inorder(arbol->izq);
-        mostrarPelicula(arbol->p);
-        inorder(arbol->der);
-    }
+if(arbol!=NULL)
+{
+Recorriendo_inorder(arbol->izq);
+mostrarPelicula(arbol->p);
+Recorriendo_inorder(arbol->der);
+}
 }
 void Recorriendo_postorder (nodoArbolPelicula * arbol)
 {
-    if(arbol!=NULL)
-    {
-        postorder(arbol->izq);
-        postorder(arbol->der);
-        mostrarPelicula(arbol->p);
-    }
+if(arbol!=NULL)
+{
+Recorriendo_postorder(arbol->izq);
+Recorriendo_postorder(arbol->der);
+mostrarPelicula(arbol->p);
 }
-
+}
 
 //borrarUnNodoArbol (buscarlo por idPelicula)
 
