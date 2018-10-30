@@ -88,21 +88,145 @@ typedef struct
 //inicLista()
 
 
+nodoListaPelicula * inicLista(){
+return NULL;
+}
 //crearNodoLista()
+
+
+
+
+
+nodoListaPelicula * crearNodoListaPelicula(stPelicula pelicula){
+nodoListaPelicula* aux =(nodoListaPelicula*) malloc(sizeof(nodoListaPelicula));
+
+aux->p = pelicula;
+aux->sig  = NULL;
+
+return aux;
+}
 
 //agregarAlPrincipio()
 
+nodoListaPelicula * agregarAlPrincipio(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo ){
 
+if(lista == NULL){
+lista = nuevoNodo;
+}
+else{
+nuevoNodo->sig = lista;
+lista = nuevoNodo;
+
+}
+
+return lista;
+}
 //agregarAlFinal()
 
 
+nodoListaPelicula * agregarAlFinal(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo){
+nodoListaPelicula * seg = lista;
+if(lista){
+seg = seg->sig;
+}
+
+if(!lista){
+lista = nuevoNodo;
+}else{
+
+if(!seg){
+lista->sig = nuevoNodo;
+}else{
+
+lista = agregarAlFinal(lista->sig,nuevoNodo);
+}
+
+}
+
+return lista;
+}
+
 //agregarEnOrdenPorNombreDePelicula()
+
+nodoListaPelicula * agregarEnOrden(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo)
+// agrega un nuevo nodo a la lista manteniendo el orden.
+{
+    //Si la lista esta vacia agrego el primer elemento.
+    if(lista == NULL)
+    {
+        lista = nuevoNodo;
+    }
+    else
+    {
+        // si el nuevo elemento es menor que el primero de la lista,
+        // agrego al principio.
+        if(strcmp(nuevoNodo->p.nombrePelicula,lista->p.nombrePelicula)<0)
+            lista = agregarAlPrincipio(lista, nuevoNodo);
+        else
+        {
+            // busco el lugar en donde insertar el nuevo elemento.
+            // necesito mantener la direccion de memoria del nodo anterior
+            // al nodo que tiene un nombre mayor al del nuevo nodo.
+            nodoListaPelicula * ante = lista;
+            nodoListaPelicula * seg = lista->sig;
+            while( (seg != NULL)&&(strcmp(nuevoNodo->p.nombrePelicula,seg->p.nombrePelicula)>=0) )
+            {
+                ante = seg;
+                seg = seg->sig;
+            }
+            // inserto el nuevo nodo en el lugar indicado.
+            nuevoNodo->sig = seg;
+            ante->sig = nuevoNodo;
+        }
+    }
+    return lista;
+
+}
 
 
 //mostrarLista()
 
 
 //borrarNodoPorIdPelicula()
+
+nodoListaPelicula * borrarNodo(int idPelicula, nodoListaPelicula * lista)
+// elimino un nodo de la lista y retorno un puntero al primer elemento de la misma.
+// esto ultimo es necesario para el caso en que se elimina el primer elemento de la lista,
+// se modifica el contenido de la variable lista, y eso no se puede hacer de la forma en
+// que esta declarada. Para poder hacerlo deber¡a poner **lista. :)
+{
+    nodoListaPelicula * seg;
+    nodoListaPelicula * ante;	//apunta al nodo anterior que seg.
+
+    if((lista != NULL) && (idPelicula == lista->p.idPelicula))
+    {
+        nodoListaPelicula * aux = lista;
+        lista = lista->sig; //salteo el primer nodo.
+        free(aux); //elimino el primer nodo.
+    }
+    else
+    {
+        seg = lista;
+        while((seg != NULL) && (idPelicula == seg->p.idPelicula))
+        {
+            ante = seg;	//adelanto una posicion la var ante.
+            seg = seg->sig; //avanzo al siguiente nodo.
+        }
+        //en este punto tengo en la variable ante la direccion de memoria del
+        //nodo anterior al buscado, y en la variable seg, la dir de memoria del
+        //nodo que quiero borrar.
+        if( seg!= NULL)
+        {
+            ante->sig = seg->sig; //salteo el nodo que quiero eliminar.
+            free(seg); //elimino el nodo.
+        }
+    }
+    return lista; //debo retornar el puntero al primer nodo, por el tipo de pasaje de parametros.
+    //No puedo modificar el contenido de la var lista, que no es lo mismo
+    //que modificar *lista (contenido de la direccion de memoria apuntada
+    //por lista.
+    //Otra forma de resolverlo es poner el par metro **lista. :)
+}
 
 
 ///---------------------------------------- TDA ARBOL --------------------------------------------
@@ -118,6 +242,15 @@ nodoArbolPelicula* crearNodoArbol(stPelicula pelicula)
 {
     nodoArbolPelicula* aux=(nodoArbolPelicula*) malloc(sizeof(nodoArbolPelicula));
 
+
+    aux->p=pelicula;
+    aux->der=NULL;
+    aux->izq=NULL;
+
+nodoArbolPelicula * crearNodoArbol(stPelicula pelicula)
+{
+    nodoArbolPelicula* aux=(nodoArbolPelicula*) malloc(sizeof(nodoArbolPelicula));
+
     aux->p=pelicula;
     aux->der=NULL;
     aux->izq=NULL;
@@ -125,7 +258,15 @@ nodoArbolPelicula* crearNodoArbol(stPelicula pelicula)
     return aux;
 }
 
+
+
+    return aux;
+}
+
+
 //insertarNodoArbol (ordenado por idPelicula)
+
+
 nodoArbolPelicula* insertarNodoArbol (nodoArbolPelicula* arbol, stPelicula nuevo )
 {
     if(arbol==NULL)
@@ -145,6 +286,7 @@ nodoArbolPelicula* insertarNodoArbol (nodoArbolPelicula* arbol, stPelicula nuevo
     }
     return arbol;
 }
+
 
 //mostrarArbol (son tres funciones, recorriendo inOrder, postOrder, preOrder)
 ///Aca tambien podria usarse el modulo que tiene la numeracion de la pelicula
@@ -186,6 +328,49 @@ void Recorriendo_postorder (nodoArbolPelicula * arbol)
     {
         Recorriendo_postorder(arbol->izq);
         Recorriendo_postorder(arbol->der);
+        mostrarPelicula(arbol->p);
+    }
+}
+
+///Aca tambien podria usarse el modulo que tiene la numeracion de la pelicula
+void mostrarPelicula(stPelicula aux) ///Muestra el contenido de una pelicula
+{
+    printf("ID: %i \n",aux.idPelicula);
+    printf("Nombre: %s \n",aux.nombrePelicula);
+    printf("Director: %s \n",aux.director);
+    printf("Genero: %s \n",aux.genero);
+    printf("Pais: %s \n",aux.pais);
+    printf("Anio: %i \n",aux.anio);
+    printf("Valoracion: %i \n",aux.valoracion);
+    printf("PM: %i \n",aux.pm);
+    printf("Eliminado: %i \n\n",aux.eliminado);
+}
+
+void Recorriendo_preorder (nodoArbolPelicula*arbol)
+{
+    if(arbol!=NULL)
+    {
+        mostrarPelicula(arbol->p);
+        preorder(arbol->izq);
+        preorder(arbol->der);
+    }
+}
+
+void Recorriendo_inorder ( nodoArbolPelicula*arbol)
+{
+    if(arbol!=NULL)
+    {
+        inorder(arbol->izq);
+        mostrarPelicula(arbol->p);
+        inorder(arbol->der);
+    }
+}
+void Recorriendo_postorder (nodoArbolPelicula * arbol)
+{
+    if(arbol!=NULL)
+    {
+        postorder(arbol->izq);
+        postorder(arbol->der);
         mostrarPelicula(arbol->p);
     }
 }
