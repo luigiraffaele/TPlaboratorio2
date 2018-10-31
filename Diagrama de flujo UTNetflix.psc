@@ -5,9 +5,10 @@ Algoritmo Inicio UTN
 			1- Inicia Sesion Usr:
 			2-Inicia Sesion Admin:
 			3- Registro:
-				// 
+				
+				
 		FinSegun
-	Hasta Que Continuar??
+	Hasta Que 
 FinAlgoritmo
 
 Funcion INICIO
