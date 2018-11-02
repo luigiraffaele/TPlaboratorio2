@@ -329,6 +329,25 @@ void Recorriendo_postorder (nodoArbolPelicula * arbol)
 }
 //borrarUnNodoArbol (buscarlo por idPelicula)
 
+//auxiliares
+nodoArbolPelicula * buscar_nodo_mas_derech(nodoArbolPelicula*arbol)
+{
+    nodoArbolPelicula *res;
+    if(arbol->der)
+    {
+        res=buscar_nodo_mas_derech((arbol->der);)
+    }
+    return res;
+}
+nodoArbolPelicula * buscar_nodo_mas_izqu(nodoArbolPelicula*arbol)
+{
+   nodoArbolPelicula *res;
+    if(arbol->izq)
+    {
+        res=buscar_nodo_mas_izqu(arbol->izq);
+    }
+    return res;
+}
 nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
 {
     if ( arbol!=NULL )
@@ -337,7 +356,7 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
         {
             if(arbol->izq!=NULL)
             {
-                nodoArbolPelicula *MasDer= arbol->izq;
+                nodoArbolPelicula *MasDer= buscar_nodo_mas_derech(arbol->izq);
                 arbol->p=MasDer->p;
                 arbol->izq=borrarUnNodoArbol(dato,arbol->izq;
 
@@ -346,7 +365,7 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
             {
                 if (arbol->der!=NULL)
                 {
-                    nodoArbolPelicula* masIzq= arbol->der;
+                    nodoArbolPelicula* masIzq= buscar_nodo_mas_izqu(arbol->der);
                     arbol->p=masIzq->p;
                     arbol->der=borrarUnNodoArbol(,arbol->der);
 
