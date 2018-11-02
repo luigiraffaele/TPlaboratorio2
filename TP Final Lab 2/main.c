@@ -329,6 +329,49 @@ void Recorriendo_postorder (nodoArbolPelicula * arbol)
 }
 //borrarUnNodoArbol (buscarlo por idPelicula)
 
+nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
+{
+    if ( arbol!=NULL )
+    {
+        if (dato==arbol->p.idPelicula)
+        {
+            if(arbol->izq!=NULL)
+            {
+                nodoArbolPelicula *MasDer= arbol->izq;
+                arbol->p=MasDer->p;
+                arbol->izq=borrarUnNodoArbol(dato,arbol->izq;
+
+            }
+                       else
+            {
+                if (arbol->der!=NULL)
+                {
+                    nodoArbolPelicula* masIzq= arbol->der;
+                    arbol->p=masIzq->p;
+                    arbol->der=borrarUnNodoArbol(,arbol->der);
+
+                }
+                else
+                {
+                    free(arbol);
+                    arbol=NULL;
+
+                }
+            }
+        }
+        if ( dato>arbol->p.idPelicula)
+        {
+            arbol->der=borrarUnNodoArbol(dato,arbol->der);
+        }
+        if ( dato<arbol->p.idPelicula)
+        {    arbol->izq= borrarUnNodoArbol(dato,arbol->izq);
+
+        }
+    }
+    return arbol;
+
+}
+
 //buscarPelicula(por idPelicula)
 nodoArbol * buscar (nodoArbolPelicula * arbol, int dato)
 {
@@ -381,28 +424,160 @@ nodoArbol * buscar (nodoArbolPelicula * arbol, int dato)
 
 
 
-        int main()
+int main()
+{
+
+    ///SWITCH
+
+    ///Espacio reservado para definicion de variables
+    int respuesta;
+    char continuar = 's';
+    int userValido = 0;
+    int adminValido = 0;
+    int respuestaOpcionesUser=0;
+    char continuarOpcionesUser = 's';
+    int respuestaOpcionesAdmin=0;
+    char continuarOpcionesAdmin = 's';
+    int respuestaOpcionesAdminPeliculas=0;
+    char continuarOpcionesAdminPeliculas = 's';
+    int respuestaOpcionesAdminUsers=0;
+    char continuarOpcionesAdminUsers = 's';
+
+    ///Switch para pantalla inicial
+
+    while(continuar == 's')
+    {
+
+        continuarOpcionesAdmin ='s';
+        continuarOpcionesAdminPeliculas ='s';
+        continuarOpcionesAdminUsers ='s';
+        continuarOpcionesUser ='s';
+
+        printf("Bienvenido a NerdFlix \n");
+
+        printf("1. ENTRAR \n");
+        printf("2. ADMIN \n");
+        printf("3. SIGN UP \n");
+        printf("ELIJA OPCION \n");
+        scanf("%d",&respuesta);
+
+        system("cls");
+
+        switch(respuesta)
         {
 
-            ///SWITCH
+        case 1:  ///ENTRAR ===================================================================================
 
-            ///Espacio reservado para definicion de variables
-            int respuesta;
-            char continuar = 's';
-            int userValido = 0;
-            int adminValido = 0;
-            int respuestaOpcionesUser=0;
-            char continuarOpcionesUser = 's';
-            int respuestaOpcionesAdmin=0;
-            char continuarOpcionesAdmin = 's';
-            int respuestaOpcionesAdminPeliculas=0;
-            char continuarOpcionesAdminPeliculas = 's';
-            int respuestaOpcionesAdminUsers=0;
-            char continuarOpcionesAdminUsers = 's';
+            /* while(userValido == 0)
+             {
+                 userValido = validacionUser();
+             }
+             if(userValido == 1) */
+        {
+            while(continuarOpcionesUser=='s')
+            {
 
-            ///Switch para pantalla inicial
+                ///reseteamos las variables para poder utilizar la funcion volver en el switch
+                continuarOpcionesAdmin ='s';
+                continuarOpcionesAdminPeliculas ='s';
+                continuarOpcionesAdminUsers ='s';
+                continuarOpcionesUser ='s';
 
-            while(continuar == 's')
+
+
+                printf("1.PERFIL \n");
+
+                printf("2.PELICULAS \n");
+
+                printf("3.VER \n");
+
+                printf("4.RECOMENDACIONES \n");
+
+                printf("5.HISTORIAL \n");
+
+                printf("6.SALIR \n");
+
+                printf("ELIJA OPCION \n");
+
+                scanf("%d",&respuestaOpcionesUser);
+
+                system("cls");
+
+                switch(respuestaOpcionesUser)
+                {
+
+                case 1: ///PERFIL
+
+                    ///IMPRIME INFORMACION DEL USUARIO
+                    break;
+
+                case 2: ///PELICULAS
+
+                    ///SWITCH CON 2 OPCIONES TITULO O GENERO LUEGO MUESTRA LAS PELICULAS ORDENADAS
+
+                    break;
+
+                case 3: /// VER
+
+                    ///FUNCION PARA ELEJIR UNA PELICULA Y VERLA, PODRIA ESTAR ADENTRO DE LA FUNCION ANTERIOR(A DEBATIR)
+
+                    break;
+
+                case 4: /// RECOMENDACIONES
+
+                    ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
+
+                    break;
+
+                case 5: /// HISTORIAL
+
+                    /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
+
+                    break;
+
+                case 6: /// Vuelve al menu anterior
+
+                    continuarOpcionesUser= 'n';
+
+
+
+                    break;
+
+
+                default:
+
+                    printf("opcion invalida\n");
+
+                    break;
+                }
+            }
+
+        }
+
+
+
+
+
+        break;
+        ///==================================================================================================
+
+
+
+
+
+
+        case 2: /// ADMIN ====================================================================================
+
+
+
+            /* while(adminValido == 0)
+            {
+            adminValido = validacionAdmin();
+            }
+            if(adminValido == 1) */
+
+
+            while(continuarOpcionesAdmin=='s')
             {
 
                 continuarOpcionesAdmin ='s';
@@ -410,96 +585,70 @@ nodoArbol * buscar (nodoArbolPelicula * arbol, int dato)
                 continuarOpcionesAdminUsers ='s';
                 continuarOpcionesUser ='s';
 
-                printf("Bienvenido a NerdFlix \n");
+                printf("1.Administrar Peliculas \n");
+                printf("2.Administrar Usuarios \n");
+                printf("3.SALIR \n");
+                printf("ELIJA UNA OPCION \n");
 
-                printf("1. ENTRAR \n");
-                printf("2. ADMIN \n");
-                printf("3. SIGN UP \n");
-                printf("ELIJA OPCION \n");
-                scanf("%d",&respuesta);
+                scanf("%d",&respuestaOpcionesAdmin);
 
                 system("cls");
 
-                switch(respuesta)
+                switch(respuestaOpcionesAdmin)
                 {
 
-                case 1:  ///ENTRAR ===================================================================================
+                case 1:///adm peliculas
 
-                    /* while(userValido == 0)
-                     {
-                         userValido = validacionUser();
-                     }
-                     if(userValido == 1) */
-                {
-                    while(continuarOpcionesUser=='s')
+                    while(continuarOpcionesAdminPeliculas=='s')
                     {
 
-                        ///reseteamos las variables para poder utilizar la funcion volver en el switch
                         continuarOpcionesAdmin ='s';
                         continuarOpcionesAdminPeliculas ='s';
                         continuarOpcionesAdminUsers ='s';
                         continuarOpcionesUser ='s';
 
+                        printf("1.ALTA \n");
+                        printf("2.BAJA \n");
+                        printf("3.MODIFICAR \n");
+                        printf("4.CONSULTA \n");
+                        printf("5.LISTADOS \n");
+                        printf("6. VOLVER \n");
+                        printf("ELIJA UNA OPCION \n");
 
-
-                        printf("1.PERFIL \n");
-
-                        printf("2.PELICULAS \n");
-
-                        printf("3.VER \n");
-
-                        printf("4.RECOMENDACIONES \n");
-
-                        printf("5.HISTORIAL \n");
-
-                        printf("6.SALIR \n");
-
-                        printf("ELIJA OPCION \n");
-
-                        scanf("%d",&respuestaOpcionesUser);
+                        scanf("%d",&respuestaOpcionesAdminPeliculas);
 
                         system("cls");
 
-                        switch(respuestaOpcionesUser)
+                        switch(respuestaOpcionesAdminPeliculas)
                         {
 
-                        case 1: ///PERFIL
-
-                            ///IMPRIME INFORMACION DEL USUARIO
-                            break;
-
-                        case 2: ///PELICULAS
-
-                            ///SWITCH CON 2 OPCIONES TITULO O GENERO LUEGO MUESTRA LAS PELICULAS ORDENADAS
+                        case 1: ///alta peliculas
 
                             break;
 
-                        case 3: /// VER
-
-                            ///FUNCION PARA ELEJIR UNA PELICULA Y VERLA, PODRIA ESTAR ADENTRO DE LA FUNCION ANTERIOR(A DEBATIR)
+                        case 2: ///baja peliculas
 
                             break;
 
-                        case 4: /// RECOMENDACIONES
-
-                            ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
+                        case 3: /// modificar peliculas
 
                             break;
 
-                        case 5: /// HISTORIAL
+                        case 4: /// consultar peliculas
 
-                            /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
+                            break;
+
+                        case 5: /// listados de peliculas
 
                             break;
 
                         case 6: /// Vuelve al menu anterior
 
-                            continuarOpcionesUser= 'n';
+                            continuarOpcionesAdminPeliculas= 'n';
 
 
 
                             break;
-
 
                         default:
 
@@ -507,34 +656,15 @@ nodoArbol * buscar (nodoArbolPelicula * arbol, int dato)
 
                             break;
                         }
+
                     }
 
-                }
+                    break;
+
+                case 2:///adm users
 
 
-
-
-
-                break;
-                ///==================================================================================================
-
-
-
-
-
-
-                case 2: /// ADMIN ====================================================================================
-
-
-
-                    /* while(adminValido == 0)
-                    {
-                    adminValido = validacionAdmin();
-                    }
-                    if(adminValido == 1) */
-
-
-                    while(continuarOpcionesAdmin=='s')
+                    while(continuarOpcionesAdminUsers=='s')
                     {
 
                         continuarOpcionesAdmin ='s';
@@ -542,192 +672,105 @@ nodoArbol * buscar (nodoArbolPelicula * arbol, int dato)
                         continuarOpcionesAdminUsers ='s';
                         continuarOpcionesUser ='s';
 
-                        printf("1.Administrar Peliculas \n");
-                        printf("2.Administrar Usuarios \n");
-                        printf("3.SALIR \n");
+                        printf("1.ALTA \n");
+                        printf("2.BAJA \n");
+                        printf("3.MODIFICAR \n");
+                        printf("4.CONSULTA \n");
+                        printf("5.LISTADOS \n");
+                        printf("6.VOLVER \n");
                         printf("ELIJA UNA OPCION \n");
 
-                        scanf("%d",&respuestaOpcionesAdmin);
+                        scanf("%d",&respuestaOpcionesAdminUsers);
 
                         system("cls");
 
-                        switch(respuestaOpcionesAdmin)
+                        switch(respuestaOpcionesAdminUsers)
                         {
 
-                        case 1:///adm peliculas
-
-                            while(continuarOpcionesAdminPeliculas=='s')
-                            {
-
-                                continuarOpcionesAdmin ='s';
-                                continuarOpcionesAdminPeliculas ='s';
-                                continuarOpcionesAdminUsers ='s';
-                                continuarOpcionesUser ='s';
-
-                                printf("1.ALTA \n");
-                                printf("2.BAJA \n");
-                                printf("3.MODIFICAR \n");
-                                printf("4.CONSULTA \n");
-                                printf("5.LISTADOS \n");
-                                printf("6. VOLVER \n");
-                                printf("ELIJA UNA OPCION \n");
-
-                                scanf("%d",&respuestaOpcionesAdminPeliculas);
-
-                                system("cls");
-
-                                switch(respuestaOpcionesAdminPeliculas)
-                                {
-
-                                case 1: ///alta peliculas
-
-                                    break;
-
-                                case 2: ///baja peliculas
-
-                                    break;
-
-                                case 3: /// modificar peliculas
-
-                                    break;
-
-                                case 4: /// consultar peliculas
-
-                                    break;
-
-                                case 5: /// listados de peliculas
-
-                                    break;
-
-                                case 6: /// Vuelve al menu anterior
-
-                                    continuarOpcionesAdminPeliculas= 'n';
-
-
-
-                                    break;
-
-                                default:
-
-                                    printf("opcion invalida\n");
-
-                                    break;
-                                }
-
-                            }
+                        case 1: ///alta usuarios
 
                             break;
 
-                        case 2:///adm users
-
-
-                            while(continuarOpcionesAdminUsers=='s')
-                            {
-
-                                continuarOpcionesAdmin ='s';
-                                continuarOpcionesAdminPeliculas ='s';
-                                continuarOpcionesAdminUsers ='s';
-                                continuarOpcionesUser ='s';
-
-                                printf("1.ALTA \n");
-                                printf("2.BAJA \n");
-                                printf("3.MODIFICAR \n");
-                                printf("4.CONSULTA \n");
-                                printf("5.LISTADOS \n");
-                                printf("6.VOLVER \n");
-                                printf("ELIJA UNA OPCION \n");
-
-                                scanf("%d",&respuestaOpcionesAdminUsers);
-
-                                system("cls");
-
-                                switch(respuestaOpcionesAdminUsers)
-                                {
-
-                                case 1: ///alta usuarios
-
-                                    break;
-
-                                case 2: ///baja usuarios
-
-                                    break;
-
-                                case 3: /// modificar usuarios
-
-                                    break;
-
-                                case 4: /// consultar usuarios
-
-                                    break;
-
-                                case 5: /// listados de usuarios
-
-                                    break;
-
-                                case 6: /// volver
-
-                                    continuarOpcionesAdminUsers = 'n';
-
-                                    break;
-
-                                default:
-
-                                    printf("opcion invalida\n");
-                                }
-
-                            }
+                        case 2: ///baja usuarios
 
                             break;
 
-                        case 3:
-                            continuarOpcionesAdmin = 'n';
+                        case 3: /// modificar usuarios
+
                             break;
 
+                        case 4: /// consultar usuarios
 
+                            break;
 
+                        case 5: /// listados de usuarios
 
+                            break;
 
+                        case 6: /// volver
 
+                            continuarOpcionesAdminUsers = 'n';
+
+                            break;
 
                         default:
 
-                            printf("opcion invalida \n");
-
-
+                            printf("opcion invalida\n");
                         }
+
                     }
 
-
                     break;
 
-                case 3: /// SIGN UP
-
-
-                    ///llamar funcion de cadastrar usuarios
-
+                case 3:
+                    continuarOpcionesAdmin = 'n';
                     break;
 
-                default :
-                    printf("opcion invalida/n");
-                    break;
+
+
+
+
+
+
+                default:
+
+                    printf("opcion invalida \n");
 
 
                 }
-
-
-
-
-
-
-
-
             }
 
 
+            break;
+
+        case 3: /// SIGN UP
 
 
+            ///llamar funcion de cadastrar usuarios
+
+            break;
+
+        default :
+            printf("opcion invalida/n");
+            break;
 
 
-
-            return 0;
         }
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+    return 0;
+}
