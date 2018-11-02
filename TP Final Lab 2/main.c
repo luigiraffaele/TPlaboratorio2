@@ -335,13 +335,13 @@ nodoArbolPelicula * buscar_nodo_mas_derech(nodoArbolPelicula*arbol)
     nodoArbolPelicula *res;
     if(arbol->der)
     {
-        res=buscar_nodo_mas_derech((arbol->der);)
+        res=buscar_nodo_mas_derech(arbol->der);
     }
     return res;
 }
 nodoArbolPelicula * buscar_nodo_mas_izqu(nodoArbolPelicula*arbol)
 {
-   nodoArbolPelicula *res;
+    nodoArbolPelicula *res;
     if(arbol->izq)
     {
         res=buscar_nodo_mas_izqu(arbol->izq);
@@ -358,9 +358,9 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
             {
                 nodoArbolPelicula *MasDer= buscar_nodo_mas_derech(arbol->izq);
                 arbol->p=MasDer->p;
-                arbol->izq=borrarUnNodoArbol(dato,arbol->izq;
-
+                arbol->izq=borrarUnNodoArbol(dato,arbol->izq);
             }
+
                        else
             {
                 if (arbol->der!=NULL)
@@ -368,13 +368,11 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
                     nodoArbolPelicula* masIzq= buscar_nodo_mas_izqu(arbol->der);
                     arbol->p=masIzq->p;
                     arbol->der=borrarUnNodoArbol(,arbol->der);
-
                 }
                 else
                 {
                     free(arbol);
                     arbol=NULL;
-
                 }
             }
         }
@@ -383,7 +381,8 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
             arbol->der=borrarUnNodoArbol(dato,arbol->der);
         }
         if ( dato<arbol->p.idPelicula)
-        {    arbol->izq= borrarUnNodoArbol(dato,arbol->izq);
+        {
+            arbol->izq= borrarUnNodoArbol(dato,arbol->izq);
 
         }
     }
