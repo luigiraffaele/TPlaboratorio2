@@ -358,16 +358,15 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
             {
                 nodoArbolPelicula *MasDer= buscar_nodo_mas_derech(arbol->izq);
                 arbol->p=MasDer->p;
-                arbol->izq=borrarUnNodoArbol(dato,arbol->izq);
+                arbol->izq=borrarUnNodoArbol(MasDer->p.idPelicula,arbol->izq);
             }
-
-                       else
+            else
             {
                 if (arbol->der!=NULL)
                 {
                     nodoArbolPelicula* masIzq= buscar_nodo_mas_izqu(arbol->der);
                     arbol->p=masIzq->p;
-                    arbol->der=borrarUnNodoArbol(,arbol->der);
+                    arbol->der=borrarUnNodoArbol(masIzq->p.idPelicula,arbol->der);
                 }
                 else
                 {
@@ -391,9 +390,9 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
 }
 
 //buscarPelicula(por idPelicula)
-nodoArbol * buscar (nodoArbolPelicula * arbol, int dato)
+nodoArbolPelicula * buscar (nodoArbolPelicula * arbol, int dato)
 {
-    nodoArbol * rta=NULL;
+    nodoArbolPelicula * rta=NULL;
     /// si no esta retornamos NULL
 
     if (arbol!=NULL)
