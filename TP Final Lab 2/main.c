@@ -417,6 +417,100 @@ nodoArbolPelicula * buscar (nodoArbolPelicula * arbol, int dato)
 }
 
 //cargarArbolDesdeArchivo()
+//auxiliar
+int cantidadPelisArchivo( char nombre_archivo_pelis[])
+{
+    int cant;
+    stPelicula aux;
+
+    FILE *archi=NULL;
+    archi=fopen(nombre_archivo_pelis,"rb");
+    if (archi!=NULL)
+    {
+        fseek(archi, 0, SEEK_END);
+
+        cant=ftell(archi)/sizeof(stPelicula);
+    }
+    fclose(archi);
+    return cant
+}
+
+int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
+{
+    int i=0;
+    int stop=1;
+    stPelicula auxiliar;
+    archi=fopen(archivo,"rb");
+    if(archi!=NULL)
+    {
+        while (stop>0)
+        {
+            stop=fread(&auxiliar,sizeof(stPelicula),1,archivo);
+            arreglito[i]=auxiliar;
+            i++;
+
+        }
+    }
+    fclose(archi);
+    return i;
+}
+
+nodoArbolPelicula* cargarArbolDesdeArchivo (char nombre_archivo_pelis, nodoArbolPelicula * arbol)
+{
+
+    stPelicula aux;
+    int aux;
+    int cant= cantidadPelisArchivo(nombre_archivo_pelis);
+    FILE * archi=NULL;
+    archi= fopen(nombre_archivo_pelis,"rb");
+    if(archi!=NULL)
+    {
+
+       stPelicula arregloAux[cant];
+       int validos_arreglo=ArchivoAArreglo(nombre_archivo_pelis,arregloAux);
+
+
+
+
+    }
+    fclose(archi);
+
+    return arbol;
+}
+
+
+
+
+
+///----------------------------FUNCIONES DE PELIS VISTAS---------------------------------------------
+
+int cantidadPeliculasVistasArchi(char nombre_archivo[])
+{
+    FILE * archi;
+    int a=0;
+    archi=fopen(nombre_archivo, "rb");
+    if (archi!=NULL)
+    {
+        fseek(archi, 0, SEEK_END);
+        a = ftell(archi)/(sizeof(stPelisVistas));
+        fclose(archi);
+    }
+    return a;
+}
+
+
+stPelisVistas crearNuevaPeliVista( int idUsr, int idPeli, char nombre_archivo_PelisVistas[])
+{
+
+    stPelisVistas nuevo;
+
+    nuevo.idAutoincremental=cantidadPeliculasVistasArchi(nombre_archivo_PelisVistas) +1 ;
+    nuevo.idPelicula=idPeli;
+    nuevo.idUsuario=idUsr;
+
+    return nuevo;
+
+}
 
 
 
