@@ -390,7 +390,7 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
 }
 
 //buscarPelicula(por idPelicula)
-nodoArbolPelicula * buscar (nodoArbolPelicula * arbol, int dato)
+nodoArbolPelicula * buscarPelicula (nodoArbolPelicula * arbol, int dato)
 {
     nodoArbolPelicula * rta=NULL;
     /// si no esta retornamos NULL
@@ -405,11 +405,11 @@ nodoArbolPelicula * buscar (nodoArbolPelicula * arbol, int dato)
         {
             if(dato>arbol->p.idPelicula)
             {
-                rta=buscar(arbol->der, dato);
+                rta=buscarPelicula(arbol->der, dato);
             }
             else
             {
-                rta=buscar(arbol->izq, dato);
+                rta=buscarPelicula(arbol->izq, dato);
             }
         }
     }
@@ -497,6 +497,7 @@ int cantidadPeliculasVistasArchi(char nombre_archivo[])
     }
     return a;
 }
+
 
 
 stPelisVistas crearNuevaPeliVista( int idUsr, int idPeli, char nombre_archivo_PelisVistas[])
