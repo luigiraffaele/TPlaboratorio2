@@ -440,6 +440,7 @@ int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
     int i=0;
     int stop=1;
     stPelicula auxiliar;
+    FILE * archi;
     archi=fopen(archivo,"rb");
     if(archi!=NULL)
     {
