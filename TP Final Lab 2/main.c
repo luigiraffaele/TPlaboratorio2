@@ -573,7 +573,7 @@ void cargaPeliVistasArchivo ( char nombre_archivo[], stPelisVistas nuevo) ///Car
 }
 
 
-stCelda CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]) ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
+void  CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]) ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
 {
 
     stPelisVistas PeliVistaAux;
@@ -583,21 +583,18 @@ stCelda CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], 
     archi=fopen(nombre_archivo,"rb");
     if(archi!=NULL)
     {
-        while (fread(PeliVistaAux)>0)
+        while (fread(&PeliVistaAux,sizeof(stPelisVistas))>0)
         {
             int pos= buscarUsuario(arreglo,PeliVistaAux.idUsuario,validos_Arreglo);
             if (pos>-1)
             {
                 PeliculaAux=buscarPelicula(arbol,PeliVistaAux.idPelicula);
                 nodoListaPelicula* nodoAux=crearNodoListaPelicula(PeliculaAux);
-                arreglo[pos].listaPelis=agregarAlFinal( arreglo[pos].listaPelis,nodoAux)
-
+                arreglo[pos].listaPelis=agregarAlFinal( arreglo[pos].listaPelis,nodoAux);
             }
-
         }
         fclose(archi);
     }
-return arreglo;
 }
 
 
