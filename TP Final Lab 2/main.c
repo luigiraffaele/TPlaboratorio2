@@ -464,6 +464,7 @@ nodoArbolPelicula * buscar_nodo_mas_izqu(nodoArbolPelicula*arbol)
     }
     return res;
 }
+
 nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol) /// el dato es el id de la pelicula por borrar
 {
     if ( arbol!=NULL )
@@ -497,7 +498,7 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol) /// e
         }
         if ( dato<arbol->p.idPelicula)
         {
-            arbol->izq= borrarUnNodoArbol(dato,arbol->izq);
+            arbol->izq=borrarUnNodoArbol(dato,arbol->izq);
 
         }
     }
@@ -505,10 +506,9 @@ nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol) /// e
 
 }
 
-//buscarPelicula(por idPelicula)
-nodoArbolPelicula * buscarPelicula (nodoArbolPelicula * arbol, int dato)
+nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato)
 {
-    nodoArbolPelicula * rta=NULL;
+    nodoArbolPelicula *rta=NULL;
     /// si no esta retornamos NULL
 
     if (arbol!=NULL)
@@ -910,15 +910,15 @@ void mostrarUsuario(stCelda adl)
 {
 
     printf("\n Admin: %d",adl.usr.admin);
-    printf("\n idUsuario: %d" adl.usr.idUsuario);
-    printf("\n nombreUsuario: %s",adl.usr.NombreUsuario);
+    printf("\n idUsuario: %d", adl.usr.idUsuario);
+    printf("\n nombreUsuario: %s",adl.usr.nombreUsuario);
     printf("\n genero: %c", adl.usr.genero);
-    printf("\n pais: %s ", ald.usr.pais);
+    printf("\n pais: %s ", adl.usr.pais);
     printf("\n Nacimiento: %d ", adl.usr.anioNacimiento);
 
 }
 
-void mostrarListaPelisVistas(nodoListaPelicula *lista, nodoArbolPelicula arbolPeliculas)
+void mostrarListaPelisVistas(nodoListaPelicula *lista, nodoArbolPelicula *arbolPeliculas)
 {
 
     if(lista != NULL)
@@ -934,7 +934,7 @@ void mostrarListaPelisVistas(nodoListaPelicula *lista, nodoArbolPelicula arbolPe
 }
 
 
-void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula arbolPeliculas)
+void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula *arbolPeliculas)
 {
     int i;
     for(i=0; i<cant; i++)
@@ -946,66 +946,6 @@ void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula arbolPeliculas)
 }
 
 //manejo del password encriptado
-
-void pasarMatrixAString(char contrasenia[11],int contraseniaMatrix[2][5])
-{
-    int fila;
-    int columna;
-    int i = 0;
-    contrasenia[10]='\0';
-    for(columna=0; columna<5; columna++)
-    {
-        for(fila=0; fila<2; fila++)
-        {
-            contrasenia [i] = contraseniaMatrix[fila][columna];
-            i++;
-        }
-    }
-}
-
-
-void encriptarContrasenia(int contraseniaMatrix[2][5],int pass[2][5])
-{
-    int testigo[2][2];
-    int row,col;
-    int i;
-
-    testigo[0][0]=1;
-    testigo[0][1]=0;
-    testigo[1][0]=2;
-    testigo[1][1]=1;
-
-    for(row=0; row<2; row++)
-    {
-        for(col=0; col<5; col++)
-        {
-            pass[row][col] = testigo[row][0]*contraseniaMatrix[0][col]+testigo[row][1]*contraseniaMatrix[1][col];
-        }
-    }
-}
-
-
-///
-void desencriptarContrasenia(int contraseniaMatrix[2][5],int pass[2][5])
-{
-    int testigo[2][2];
-    int row,col;
-    int i;
-
-    testigo[0][0]=1;
-    testigo[0][1]=0;
-    testigo[1][0]=-2;
-    testigo[1][1]=1;
-
-    for(row=0; row<2; row++)
-    {
-        for(col=0; col<5; col++)
-        {
-            pass[row][col] = testigo[row][0]*contraseniaMatrix[0][col]+testigo[row][1]*contraseniaMatrix[1][col];
-        }
-    }
-}
-
 
 
 
