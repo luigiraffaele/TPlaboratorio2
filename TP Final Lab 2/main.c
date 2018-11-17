@@ -68,7 +68,7 @@ typedef struct
 
 //Alta
 ///falta peinar
-pelicula cargarPelicula()  ///Carga una pelicula y la retorna
+stPelicula cargarPelicula()  ///Carga una pelicula y la retorna
 {
     stPelicula aux;
     printf("Nombre: ");
@@ -1116,16 +1116,8 @@ int main()
             }
 
         }
-
-
-
-
-
         break;
         ///==================================================================================================
-
-
-
 
 
 
@@ -1221,7 +1213,6 @@ int main()
                         }
 
                     }
-
                     break;
 
                 case 2:///adm users
@@ -1319,13 +1310,6 @@ int main()
 
 
         }
-
-
-
-
-
-
-
 
     }
 
