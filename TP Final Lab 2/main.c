@@ -565,6 +565,18 @@ void cargaPeliVistasArchivo ( char nombre_archivo[], stPelisVistas nuevo) ///Car
 void CargaPeliVistaAlArregloUsr ( stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]) ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
 {
 
+ stPelisVistas PeliVistaAux;
+ stPelicula PeliculaAux;
+
+    FILE *archi;
+    archi=fopen(nombre_archivo,"rb");
+    if(archi!=NULL)
+    {
+     while (fread())
+
+
+
+    }
 
 }
 
