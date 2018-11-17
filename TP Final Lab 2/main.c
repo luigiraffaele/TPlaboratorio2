@@ -171,7 +171,19 @@ void modificarPeliculas(nodoArbolPelicula *arbol,int id)  ///Permite modificar l
 }
 
 
+void cargaPeliculaArchivo ( char nombre_archivo[], stPelicula nuevo) ///Carga una estructura de pelicula nuevo al archivo
+{
 
+    FILE *archi;
+    archi=fopen(nombre_archivo,"ab");
+
+    if( archi!=NULL)
+    {
+        fwrite(&nuevo,sizeof(stPelicula),1,archi);
+
+        fclose(archi);
+    }
+}
 
 
 /// ----------------------------TDA LISTA SIMPLE -------------------------------------------
@@ -815,7 +827,19 @@ void mostrarUsuarioConNumeros(stUsuario aux)  ///Muestra el contenido de un usua
 
 
 
+void cargaUsuarioArchivo ( char nombre_archivo[], stUsuario nuevo) ///Carga una estructura de usuario nuevo al archivo
+{
 
+    FILE *archi;
+    archi=fopen(nombre_archivo,"ab");
+
+    if( archi!=NULL)
+    {
+        fwrite(&nuevo,sizeof(stUsuario),1,archi);
+
+        fclose(archi);
+    }
+}
 
 void modificarUsuario(stUsuario *aux) ///Permite modificar el contenido de cada campo del usuario
 {
