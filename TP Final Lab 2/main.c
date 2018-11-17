@@ -438,163 +438,89 @@ int cantidadPelisArchivo( char nombre_archivo_pelis[])
 int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
 {
     int i=0;
-    int stop=1;
+
     stPelicula auxiliar;
     FILE * archi;
     archi=fopen(archivo,"rb");
     if(archi!=NULL)
     {
-        while (stop>0)
+        while (fread(&auxiliar,sizeof(stPelicula),1,archivo)>0)
         {
-            stop=fread(&auxiliar,sizeof(stPelicula),1,archivo);
+
             arreglito[i]=auxiliar;
             i++;
 
         }
+        fclose(archi);
     }
-    fclose(archi);
+
     return i;
 }
 
-nodoArbolPelicula* cargarArbolDesdeArchivo (char nombre_archivo_pelis, nodoArbolPelicula * arbol)
+nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol)
 {
 
     stPelicula aux;
     int aux;
     int cant= cantidadPelisArchivo(nombre_archivo_pelis);
-    FILE * archi=NULL;
-    archi= fopen(nombre_archivo_pelis,"rb");
-    if(archi!=NULL)
-    {
-
-        stPelicula arregloAux[cant];
-        int validos_arreglo=ArchivoAArreglo(nombre_archivo_pelis,arregloAux);
 
 
+    stPelicula arregloAux[cant];
+    int validos_arreglo=ArchivoAArreglo(nombre_archivo_pelis,arregloAux);
 
+    arbol=ArregloPelisToArbol(0,validos_arreglo,validos_arreglo+1,arbol,arregloAux);
 
-    }
-    fclose(archi);
 
     return arbol;
 }
-/*
+
 nodoArbolPelicula * ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[] )
 {
-
-   if (cantidad%2==0)
-   {
-    int medio = cantidad/2 ;
-   }
-   else
-   {
-       int medio=(cantidad/2)+1;
-   }
     int nuevofin=fin;
     int nuevoinic=inic;
     int aux;
 
-
-
-    if ( arbol==NULL) // inserta la raiz
+    if (cantidad>0)
     {
+        if (cantidad%2==0)
+        {
+            int medio = cantidad/2 ;
+        }
+        else
+        {
+            int medio=(cantidad/2)+1;
+        }
+
         arbol=insertarNodoArbol(arbol,pelis[medio]);
         cantidad--;
 
+        nuevofin=medio-1;
+        arbol->izq=ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis); // primero para la izquierda)
 
-       if (cantidad%2==0) //cant
-        {
-          nuevofin=medio-1;
-          ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis ); // primero para la izquierda)
-
-          nuevoinic = medio+1;
-          nuevofin=fin;
-          ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis);
-
-        }
-        else // cant impar
-        {
-          nuevofin=medio-1;
-          medio=medio-1;
-          ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis);
-
-
-        }
+        nuevoinic = medio+1;
+        nuevofin=fin;
+        arbol->der=ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis); // ahora a la derecha
     }
     else
     {
-        if (cantidad%2==0) //cant par
-        {
-
-
-            arbol=insertarNodoArbol(arbol,pelis[medio]);
-            cantidad--;
-
-
-
-        }
-        else // cant impar
-        {
-
-
-            arbol=insertarNodoArbol(arbol,pelis[medio]);
-
-
-        }
+        arbol=NULL;
     }
-
     rta=arbol;
+    return rta;
 }
-
-*/
-
-nodoArbolPelicula * ArregloPelisToArbol (  int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[] )
-{
-
-
-    int medio = cantidad/2;
-
-
-    arbol=insertarNodoArbol(arbol,pelis[medio]);
-
-    int i=0;
-    while (i<cantidad)
-    {
-        if (i!=medio)
-        {
-            arbol=insertarNodoArbol(arbol,pelis[i]);
-        }
-        i=i+3;
-
-    }
-    i=1;
-    while (i<cantidad)
-    {
-        if(i!=medio)
-        {
-            arbol=insertarNodoArbol(arbol,pelis[i]);
-        }
-
-        i=i+3;
-    }
-    i=2;
-    while ( i<cantidad)
-    {
-        if(i!=medio)
-        {
-            arbol=insertarNodoArbol(arbol,pelis[i]);
-        }
-
-        i=i+3;
-    }
-
-    return arbol;
-}
-
-
 
 ///----------------------------FUNCIONES DE PELIS VISTAS---------------------------------------------
+/// provisorio
+int buscarUsuario(stCelda adl[],int id,int cant)
+{
+    int i = 0;
 
+    while(adl[i].usr.idUsuario != id)
+    {
+        i++;
+    }
+    return i;
+}
 int cantidadPeliculasVistasArchi(char nombre_archivo[])
 {
     FILE * archi;
@@ -613,17 +539,46 @@ int cantidadPeliculasVistasArchi(char nombre_archivo[])
 
 stPelisVistas crearNuevaPeliVista( int idUsr, int idPeli, char nombre_archivo_PelisVistas[])
 {
-
     stPelisVistas nuevo;
 
-    nuevo.idAutoincremental=cantidadPeliculasVistasArchi(nombre_archivo_PelisVistas) +1 ;
+    nuevo.idAutoincremental=cantidadPeliculasVistasArchi(nombre_archivo_PelisVistas)+1 ;
     nuevo.idPelicula=idPeli;
     nuevo.idUsuario=idUsr;
 
     return nuevo;
-
 }
 
+void cargaPeliVistasArchivo ( char nombre_archivo[], stPelisVistas nuevo) ///Carga una estructura de pelivista nueva al archivo
+{
+
+    FILE *archi;
+    archi=fopen(nombre_archivo,"ab");
+
+    if( archi!=NULL)
+    {
+        fwrite(&nuevo,sizeof(stPelisVistas),1,archi);
+
+        fclose(archi);
+    }
+}
+
+void CargaPeliVistaAlArregloUsr ( stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]) ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
+{
+
+ stPelisVistas PeliVistaAux;
+ stPelicula PeliculaAux;
+
+    FILE *archi;
+    archi=fopen(nombre_archivo,"rb");
+    if(archi!=NULL)
+    {
+     while (fread())
+
+
+
+    }
+
+}
 
 
 ///----------------------------------- FUNCIONES DE USUARIOS ------------------------------------------
@@ -638,6 +593,7 @@ stPelisVistas crearNuevaPeliVista( int idUsr, int idPeli, char nombre_archivo_Pe
 
 
 //Consulta y Listados de Usuarios
+
 
 
 //manejo del password encriptado
