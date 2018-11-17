@@ -467,8 +467,8 @@ nodoArbolPelicula* cargarArbolDesdeArchivo (char nombre_archivo_pelis, nodoArbol
     if(archi!=NULL)
     {
 
-       stPelicula arregloAux[cant];
-       int validos_arreglo=ArchivoAArreglo(nombre_archivo_pelis,arregloAux);
+        stPelicula arregloAux[cant];
+        int validos_arreglo=ArchivoAArreglo(nombre_archivo_pelis,arregloAux);
 
 
 
@@ -478,8 +478,118 @@ nodoArbolPelicula* cargarArbolDesdeArchivo (char nombre_archivo_pelis, nodoArbol
 
     return arbol;
 }
+/*
+nodoArbolPelicula * ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[] )
+{
+
+   if (cantidad%2==0)
+   {
+    int medio = cantidad/2 ;
+   }
+   else
+   {
+       int medio=(cantidad/2)+1;
+   }
+    int nuevofin=fin;
+    int nuevoinic=inic;
+    int aux;
 
 
+
+    if ( arbol==NULL) // inserta la raiz
+    {
+        arbol=insertarNodoArbol(arbol,pelis[medio]);
+        cantidad--;
+
+
+       if (cantidad%2==0) //cant
+        {
+          nuevofin=medio-1;
+          ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis ); // primero para la izquierda)
+
+          nuevoinic = medio+1;
+          nuevofin=fin;
+          ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis);
+
+        }
+        else // cant impar
+        {
+          nuevofin=medio-1;
+          medio=medio-1;
+          ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis);
+
+
+        }
+    }
+    else
+    {
+        if (cantidad%2==0) //cant par
+        {
+
+
+            arbol=insertarNodoArbol(arbol,pelis[medio]);
+            cantidad--;
+
+
+
+        }
+        else // cant impar
+        {
+
+
+            arbol=insertarNodoArbol(arbol,pelis[medio]);
+
+
+        }
+    }
+
+    rta=arbol;
+}
+
+*/
+
+nodoArbolPelicula * ArregloPelisToArbol (  int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[] )
+{
+
+
+    int medio = cantidad/2;
+
+
+    arbol=insertarNodoArbol(arbol,pelis[medio]);
+
+    int i=0;
+    while (i<cantidad)
+    {
+        if (i!=medio)
+        {
+            arbol=insertarNodoArbol(arbol,pelis[i]);
+        }
+        i=i+3;
+
+    }
+    i=1;
+    while (i<cantidad)
+    {
+        if(i!=medio)
+        {
+            arbol=insertarNodoArbol(arbol,pelis[i]);
+        }
+
+        i=i+3;
+    }
+    i=2;
+    while ( i<cantidad)
+    {
+        if(i!=medio)
+        {
+            arbol=insertarNodoArbol(arbol,pelis[i]);
+        }
+
+        i=i+3;
+    }
+
+    return arbol;
+}
 
 
 
