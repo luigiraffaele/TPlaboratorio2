@@ -348,7 +348,7 @@ nodoArbolPelicula * buscar_nodo_mas_izqu(nodoArbolPelicula*arbol)
     }
     return res;
 }
-nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol)
+nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol) /// el dato es el id de la pelicula por borrar
 {
     if ( arbol!=NULL )
     {
