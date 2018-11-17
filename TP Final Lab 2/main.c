@@ -506,10 +506,21 @@ nodoArbolPelicula * ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoA
         arbol=NULL;
     }
     rta=arbol;
+    return rta;
 }
 
 ///----------------------------FUNCIONES DE PELIS VISTAS---------------------------------------------
+/// provisorio
+int buscarUsuario(stCelda adl[],int id,int cant)
+{
+    int i = 0;
 
+    while(adl[i].usr.idUsuario != id)
+    {
+        i++;
+    }
+    return i;
+}
 int cantidadPeliculasVistasArchi(char nombre_archivo[])
 {
     FILE * archi;
@@ -528,7 +539,6 @@ int cantidadPeliculasVistasArchi(char nombre_archivo[])
 
 stPelisVistas crearNuevaPeliVista( int idUsr, int idPeli, char nombre_archivo_PelisVistas[])
 {
-
     stPelisVistas nuevo;
 
     nuevo.idAutoincremental=cantidadPeliculasVistasArchi(nombre_archivo_PelisVistas)+1 ;
@@ -552,9 +562,8 @@ void cargaPeliVistasArchivo ( char nombre_archivo[], stPelisVistas nuevo) ///Car
     }
 }
 
-void CargaPeliVistaAlArregloUsr ( stCelda arreglo[], int validos_Arreglo, char nombre_archivo[])
+void CargaPeliVistaAlArregloUsr ( stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]) ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
 {
-
 
 
 }
@@ -572,6 +581,7 @@ void CargaPeliVistaAlArregloUsr ( stCelda arreglo[], int validos_Arreglo, char n
 
 
 //Consulta y Listados de Usuarios
+
 
 
 //manejo del password encriptado
