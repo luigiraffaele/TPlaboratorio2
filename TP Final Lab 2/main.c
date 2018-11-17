@@ -67,18 +67,109 @@ typedef struct
 
 
 //Alta
-
+///falta peinar
+pelicula cargarPelicula()  ///Carga una pelicula y la retorna
+{
+    stPelicula aux;
+    printf("Nombre: ");
+    fflush(stdin);
+    gets(&aux.nombrePelicula);
+    printf("Director: ");
+    fflush(stdin);
+    gets(&aux.director);
+    printf("Genero: ");
+    fflush(stdin);
+    gets(&aux.genero);
+    printf("Pais: ");
+    fflush(stdin);
+    gets(&aux.pais);
+    printf("Anio: ");
+    fflush(stdin);
+    scanf("%i",&aux.anio);
+    printf("Valoracion(1-10): ");
+    fflush(stdin);
+    scanf("%i",&aux.valoracion);
+    printf("PM(0,13,16,18): ");
+    fflush(stdin);
+    scanf("%i",&aux.pm);
+    aux.eliminado = 0;
+    return aux;
+}
 
 //Baja
 
 
 //Modificación
+void modificarPeliculas(nodoArbolPelicula *arbol,int id)  ///Permite modificar los valores de los campos de una pelicula
+{
+    int flag = 0;
+    int opcion;
+    char continuar = 's';
+    nodoArbolPelicula * aux1;
+    stPelicula aux;
+
+    aux1=buscarPelicula(arbol,id);
 
 
-//Consulta
+    while(flag == 0)
+    {
+        {
+            flag = 1;
+            while(continuar == 's')
+            {
+                printf("= Modificar Pelicula =\n\n");
+                mostrarPeliculaConNumeros(aux);
+                printf("Opcion: ");
+                scanf("%i",&opcion);
 
+                switch(opcion)
+                {
+                case 1:
+                    printf("Nombre: ");
+                    fflush(stdin);
+                    gets(&aux1->p.nombrePelicula);
+                    break;
+                case 2:
+                    printf("Director: ");
+                    fflush(stdin);
+                    gets(&aux1->p.director);
+                    break;
+                case 3:
+                    printf("Genero: ");
+                    fflush(stdin);
+                    gets(&aux1->p.genero);
+                    break;
+                case 4:
+                    printf("Pais: ");
+                    fflush(stdin);
+                    gets(&aux1->p.pais);
+                    break;
+                case 5:
+                    printf("Anio: ");
+                    fflush(stdin);
+                    scanf("%i",&aux1->p.anio);
+                    break;
+                case 6:
+                    printf("Valoracion: ");
+                    fflush(stdin);
+                    scanf("%i",&aux1->p.valoracion);
+                    break;
+                case 7:
+                    printf("PM: ");
+                    fflush(stdin);
+                    scanf("%i",&aux1->p.pm);
+                    break;
+                }
+                printf("Modificar otro campo? s/n ");
+                fflush(stdin);
+                scanf("%c",&continuar);
+                system("cls");
+            }
 
-//Listados
+        }
+    }
+}
+
 
 
 
@@ -92,9 +183,6 @@ nodoListaPelicula * inicLista()
     return NULL;
 }
 //crearNodoLista()
-
-
-
 nodoListaPelicula * crearNodoListaPelicula(stPelicula pelicula)
 {
     nodoListaPelicula* aux =(nodoListaPelicula*) malloc(sizeof(nodoListaPelicula));
@@ -191,11 +279,18 @@ nodoListaPelicula * agregarEnOrden(nodoListaPelicula * lista, nodoListaPelicula 
     return lista;
 
 }
-
-
 //mostrarLista()
 
+void mostrarLista(nodoListaPelicula * lista)
+{
 
+    if(lista)
+    {
+        mostrarPelicula(lista->p);
+        mostrarLista(lista->sig);
+    }
+
+}
 //borrarNodoPorIdPelicula()
 
 nodoListaPelicula * borrarNodo(int idPelicula, nodoListaPelicula * lista)
@@ -303,7 +398,10 @@ void Recorriendo_preorder (nodoArbolPelicula*arbol)
 {
     if(arbol!=NULL)
     {
-        mostrarPelicula(arbol->p);
+        if(arbol->p.eliminado!=1)
+        {
+            mostrarPelicula(arbol->p);
+        }
         Recorriendo_preorder(arbol->izq);
         Recorriendo_preorder(arbol->der);
     }
@@ -314,7 +412,10 @@ void Recorriendo_inorder ( nodoArbolPelicula*arbol)
     if(arbol!=NULL)
     {
         Recorriendo_inorder(arbol->izq);
-        mostrarPelicula(arbol->p);
+        if(arbol->p.eliminado!=1)
+        {
+            mostrarPelicula(arbol->p);
+        }
         Recorriendo_inorder(arbol->der);
     }
 }
@@ -324,7 +425,10 @@ void Recorriendo_postorder (nodoArbolPelicula * arbol)
     {
         Recorriendo_postorder(arbol->izq);
         Recorriendo_postorder(arbol->der);
-        mostrarPelicula(arbol->p);
+        if(arbol->p.eliminado!=1)
+        {
+            mostrarPelicula(arbol->p);
+        }
     }
 }
 //borrarUnNodoArbol (buscarlo por idPelicula)
@@ -470,11 +574,11 @@ nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoAr
     {
         if (cantidad%2==0)
         {
-             medio = cantidad/2 ;
+            medio = cantidad/2 ;
         }
         else
         {
-             medio=(cantidad/2)+1;
+            medio=(cantidad/2)+1;
         }
 
         arbol=insertarNodoArbol(arbol,pelis[medio]);
@@ -575,7 +679,6 @@ void  CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], in
 
     stPelisVistas PeliVistaAux;
     stPelicula PeliculaAux;
-
     FILE *archi;
     archi=fopen(nombre_archivo,"rb");
     if(archi!=NULL)
@@ -600,19 +703,284 @@ void  CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], in
 ///----------------------------------- FUNCIONES DE USUARIOS ------------------------------------------
 
 //Alta
+void pasarMatrixAString(char contrasenia[11],int contraseniaMatrix[2][5])
+{
+    int fila;
+    int columna;
+    int i = 0;
+    contrasenia[10]='\0';
+    for(columna=0; columna<5; columna++)
+    {
+        for(fila=0; fila<2; fila++)
+        {
+            contrasenia [i] = contraseniaMatrix[fila][columna];
+            i++;
+        }
+    }
+}
 
+
+void encriptarContrasenia(int contraseniaMatrix[2][5],int pass[2][5])
+{
+    int testigo[2][2];
+    int row,col;
+    int i;
+
+    testigo[0][0]=1;
+    testigo[0][1]=0;
+    testigo[1][0]=2;
+    testigo[1][1]=1;
+
+    for(row=0; row<2; row++)
+    {
+        for(col=0; col<5; col++)
+        {
+            pass[row][col] = testigo[row][0]*contraseniaMatrix[0][col]+testigo[row][1]*contraseniaMatrix[1][col];
+        }
+    }
+}
+
+
+///
+void desencriptarContrasenia(int contraseniaMatrix[2][5],int pass[2][5])
+{
+    int testigo[2][2];
+    int row,col;
+    int i;
+
+    testigo[0][0]=1;
+    testigo[0][1]=0;
+    testigo[1][0]=-2;
+    testigo[1][1]=1;
+
+    for(row=0; row<2; row++)
+    {
+        for(col=0; col<5; col++)
+        {
+            pass[row][col] = testigo[row][0]*contraseniaMatrix[0][col]+testigo[row][1]*contraseniaMatrix[1][col];
+        }
+    }
+}
+
+
+
+stUsuario cargarUsuario() ///genera un usuario, lo carga y lo retorna
+{
+    stUsuario user;
+    char temp[11];
+    int auxMatrix[2][5];
+    int i = 0;
+
+    printf("Nombre y Apellido: ");
+    fflush(stdin);
+    gets(&user.nombreUsuario);
+    printf("Password (10 caracteres): ");
+    fflush(stdin);
+    gets(&temp);
+    pasarContraseniaAMatrix(temp,auxMatrix);
+    encriptarContrasenia(auxMatrix,user.pass);
+    printf("Anio de Nacimiento: ");
+    scanf("%i",&user.anioNacimiento);
+    printf("Genero m/f: ");
+    fflush(stdin);
+    scanf("%c",&user.genero);
+    printf("Pais: ");
+    fflush(stdin);
+    gets(&user.pais);
+
+    user.eliminado = 0;
+    user.admin = 0;
+
+    return user;
+}
 
 //Baja
 
 
-//Modificación
 
+//Modificación
+void mostrarUsuarioConNumeros(stUsuario aux)  ///Muestra el contenido de un usuario listado por numeros
+{
+    char pass[11];
+    int matrix[2][5];
+    desencriptarContrasenia(aux.pass,matrix);
+    pasarMatrixAString(pass,matrix);
+    printf("1 Nombre:     %s \n",aux.nombreUsuario);
+    printf("2 Pass:       %s \n",pass);
+    printf("3 Genero:     %c   \n",aux.genero);
+    printf("4 Nacimiento: %i   \n",aux.anioNacimiento);
+    printf("5 Pais:       %s   \n",aux.pais);
+    printf("6 Admin:       %i   \n",aux.admin);
+}
+
+
+
+
+
+void modificarUsuario(stUsuario *aux) ///Permite modificar el contenido de cada campo del usuario
+{
+    int flag = 0;
+    int opcion;
+    char continuar = 's';
+    char temp[11]; ///cambie 10por11
+    int auxMatrix[2][5];
+
+
+
+
+    while(continuar == 's')
+    {
+        printf("= Modificar Usuario =\n\n");
+        mostrarUsuarioConNumeros(*aux);
+        printf("Opcion: ");
+        scanf("%i",&opcion);
+
+        switch(opcion)
+        {
+        case 1:
+            printf("Nombre: ");
+            fflush(stdin);
+            gets(&aux->nombreUsuario);
+            break;
+        case 2:
+            printf("Pass (10 caracteres): ");
+            fflush(stdin);
+            gets(&temp);
+            pasarContraseniaAMatrix(temp,auxMatrix);
+            encriptarContrasenia(auxMatrix,aux->pass);
+
+            break;
+        case 3:
+            printf("Genero: ");
+            fflush(stdin);
+            gets(&aux->genero);
+            break;
+        case 4:
+            printf("Nacimiento: ");
+            scanf("%i",&aux->anioNacimiento);
+            break;
+        case 5:
+            printf("Pais: ");
+            fflush(stdin);
+            gets(&aux->pais);
+            break;
+
+        case 6:
+            printf("Admin: 0:No 1:Si ");
+            fflush(stdin);
+            scanf("%d",&aux->admin);
+            break;
+
+        }
+        printf("Modificar otro campo? s/n ");
+        fflush(stdin);
+        scanf("%c",&continuar);
+        system("cls");
+    }
+
+}
 
 //Consulta y Listados de Usuarios
 
+void mostrarUsuario(stCelda adl)
+{
 
+    printf("\n Admin: %d",adl.usr.admin);
+    printf("\n idUsuario: %d" adl.usr.idUsuario);
+    printf("\n nombreUsuario: %s",adl.usr.NombreUsuario);
+    printf("\n genero: %c", adl.usr.genero);
+    printf("\n pais: %s ", ald.usr.pais);
+    printf("\n Nacimiento: %d ", adl.usr.anioNacimiento);
+
+}
+
+void mostrarListaPelisVistas(nodoListaPelicula *lista, nodoArbolPelicula arbolPeliculas)
+{
+
+    if(lista != NULL)
+    {
+        nodoArbolPelicula * aux = buscarPelicula(arbolPeliculas,lista->p.idPelicula);
+        mostrarPelicula(aux->p);
+        printf("\n");
+        mostrarListaPelisVistas(lista->sig,arbolPeliculas);
+
+
+    }
+
+}
+
+
+void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula arbolPeliculas)
+{
+    int i;
+    for(i=0; i<cant; i++)
+    {
+        mostrarUsuario(adl[i]);
+        mostrarListaPelisVistas(adl[i].listaPelis,arbolPeliculas);
+        printf("---------------------------------------------------------------------------");
+    }
+}
 
 //manejo del password encriptado
+
+void pasarMatrixAString(char contrasenia[11],int contraseniaMatrix[2][5])
+{
+    int fila;
+    int columna;
+    int i = 0;
+    contrasenia[10]='\0';
+    for(columna=0; columna<5; columna++)
+    {
+        for(fila=0; fila<2; fila++)
+        {
+            contrasenia [i] = contraseniaMatrix[fila][columna];
+            i++;
+        }
+    }
+}
+
+
+void encriptarContrasenia(int contraseniaMatrix[2][5],int pass[2][5])
+{
+    int testigo[2][2];
+    int row,col;
+    int i;
+
+    testigo[0][0]=1;
+    testigo[0][1]=0;
+    testigo[1][0]=2;
+    testigo[1][1]=1;
+
+    for(row=0; row<2; row++)
+    {
+        for(col=0; col<5; col++)
+        {
+            pass[row][col] = testigo[row][0]*contraseniaMatrix[0][col]+testigo[row][1]*contraseniaMatrix[1][col];
+        }
+    }
+}
+
+
+///
+void desencriptarContrasenia(int contraseniaMatrix[2][5],int pass[2][5])
+{
+    int testigo[2][2];
+    int row,col;
+    int i;
+
+    testigo[0][0]=1;
+    testigo[0][1]=0;
+    testigo[1][0]=-2;
+    testigo[1][1]=1;
+
+    for(row=0; row<2; row++)
+    {
+        for(col=0; col<5; col++)
+        {
+            pass[row][col] = testigo[row][0]*contraseniaMatrix[0][col]+testigo[row][1]*contraseniaMatrix[1][col];
+        }
+    }
+}
 
 
 
@@ -960,11 +1328,6 @@ int main()
 
 
     }
-
-
-
-
-
 
 
     return 0;
