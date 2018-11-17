@@ -514,10 +514,20 @@ nodoArbolPelicula * ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoA
 int buscarUsuario(stCelda adl[],int id,int cant)
 {
     int i = 0;
+    int flag = 0;
 
     while(adl[i].usr.idUsuario != id)
     {
         i++;
+        if(adl[i].usr.idUsuario == id)
+        {
+            flag = 1;
+        }
+
+        if(flag == 0)
+        {
+            i=-1;
+        }
     }
     return i;
 }
@@ -562,22 +572,32 @@ void cargaPeliVistasArchivo ( char nombre_archivo[], stPelisVistas nuevo) ///Car
     }
 }
 
-void CargaPeliVistaAlArregloUsr ( stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]) ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
+
+stCelda CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]) ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
 {
 
- stPelisVistas PeliVistaAux;
- stPelicula PeliculaAux;
+    stPelisVistas PeliVistaAux;
+    stPelicula PeliculaAux;
 
     FILE *archi;
     archi=fopen(nombre_archivo,"rb");
     if(archi!=NULL)
     {
-     while (fread())
+        while (fread(PeliVistaAux)>0)
+        {
+            int pos= buscarUsuario(arreglo,PeliVistaAux.idUsuario,validos_Arreglo);
+            if (pos>-1)
+            {
+                PeliculaAux=buscarPelicula(arbol,PeliVistaAux.idPelicula);
+                nodoListaPelicula* nodoAux=crearNodoListaPelicula(PeliculaAux);
+                arreglo[pos].listaPelis=agregarAlFinal( arreglo[pos].listaPelis,nodoAux)
 
+            }
 
-
+        }
+        fclose(archi);
     }
-
+return arreglo;
 }
 
 
