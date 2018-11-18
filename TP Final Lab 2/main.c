@@ -65,13 +65,14 @@ typedef struct
 /// ------------------- FUNCIONES DE PELICULAS ---------------------------------
 //Alta
 
-stPelicula cargarPelicula(char nombre_archivoPELI [])  ///Carga una pelicula y la retorna
+stPelicula cargarPelicula(char nombre_archivoPELI []);  ///Carga una pelicula y la retorna
 //Baja
 //Modificación
 void modificarPeliculas(nodoArbolPelicula *arbol,int id);  ///Permite modificar los valores de los campos de una pelicula
 void cargaPeliculaArchivo ( char nombre_archivo[], stPelicula nuevo); ///Carga una estructura de pelicula nuevo al archivo
 void sobreEscribirPeliEnArchivo(char nombre_archivo[],stPelicula nuevo);
 int validacionNombrePeliculaA(char nombre_archivoPELI[],char nombreAComparar[30]);
+
 /// ----------------------------TDA LISTA SIMPLE -------------------------------------------
 //inicLista()
 nodoListaPelicula * inicLista();
@@ -87,6 +88,7 @@ nodoListaPelicula * agregarEnOrden(nodoListaPelicula * lista, nodoListaPelicula 
 void mostrarLista(nodoListaPelicula * lista);
 //borrarNodoPorIdPelicula()
 nodoListaPelicula * borrarNodo(int idPelicula, nodoListaPelicula * lista);
+
 ///---------------------------------------- TDA ARBOL --------------------------------------------
 //inicArbol()
 nodoArbolPelicula* inicArbol ();
@@ -100,6 +102,7 @@ void mostrarPeliculaConNumeros(stPelicula aux);
 void Recorriendo_preorder (nodoArbolPelicula*arbol);
 void Recorriendo_inorder ( nodoArbolPelicula*arbol);
 void Recorriendo_postorder (nodoArbolPelicula * arbol);
+stPelicula bajaPeliculas(nodoArbolPelicula *arbol,int id);
 //borrarUnNodoArbol (buscarlo por idPelicula)
 //auxiliares
 nodoArbolPelicula * buscar_nodo_mas_derech(nodoArbolPelicula*arbol);
@@ -135,9 +138,10 @@ void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula *arbolPeliculas);
 int cantidadElementoUsuarios(char nombre_archivo[]);
 void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo) ;
 int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30]);
-
+stUsuario eliminarUsuario(stCelda adl[],int *cant,int id);
 int main()
 {
+
 
     ///SWITCH
 
@@ -450,6 +454,7 @@ int main()
 
 
             ///llamar funcion de cadastrar usuarios
+            /// con ese usr nuevo relooccear el arreglo y agrregarlo al final
 
             break;
 
@@ -1169,7 +1174,7 @@ void desencriptarContrasenia(int contraseniaMatrix[2][5],int pass[2][5])
 
 
 
-stUsuario cargarUsuario() ///genera un usuario, lo carga y lo retorna
+stUsuario cargarUsuario(char nombre_archivoUSER[]) ///genera un usuario, lo carga y lo retorna
 {
     stUsuario user;
     char temp[11];
@@ -1184,7 +1189,7 @@ stUsuario cargarUsuario() ///genera un usuario, lo carga y lo retorna
         printf("Ingrese Nombre y Apellido: ");
         fflush(stdin);
         gets(&user.nombreUsuario);
-        correcto=validacionNombreArchivo(nombre_archivoUSER,nuevo.nombreUsuario);
+        correcto=validacionNombreArchivo(nombre_archivoUSER,user.nombreUsuario);
         if ((correcto)!=0)
         {
             printf("Usuario no disponible");
@@ -1359,7 +1364,7 @@ void sobreEscribirPeliEnArchivo(char nombre_archivo[],stPelicula nuevo)
     stPelicula a;
 
     FILE *archi;
-    archi=fopen(nombre_archivoPELI,"r+b");
+    archi=fopen(nombre_archivo,"r+b");
     if (archi!=NULL)
     {
         fseek(archi,sizeof(stPelicula)*(nuevo.idPelicula-1),SEEK_SET);
@@ -1412,8 +1417,8 @@ int cantidadElementoUsuarios(char nombre_archivo[])
     }
     return a;
 }
-void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo)
-{
+void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo){
+
     stUsuario a;
     FILE *archi;
     archi=fopen(nombre_archivo,"r+b");
@@ -1469,21 +1474,14 @@ stPelicula bajaPeliculas(nodoArbolPelicula *arbol,int id)  ///Permite modificar 
 
     aux1->p.eliminado = 1;
 
-  return aux1->p;
+    return aux1->p;
 }
 
-stUsuario eliminarUsuario(stCelda adl[],int *cant,int id})
+stUsuario eliminarUsuario(stCelda adl[],int cant,int id)
 {
-    int pos = buscarUsuario(adl,id,cant);
+    int pos = buscarUsuario(adl,id,*cant);
     stUsuario user = adl[pos].usr;
     user.eliminado=1;
 
-    free(adl[pos]);
-    cant--;
-
     return user;
-
-
-
-
 }
