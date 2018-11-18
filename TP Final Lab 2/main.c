@@ -135,6 +135,7 @@ void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula *arbolPeliculas);
 int cantidadElementoUsuarios(char nombre_archivo[]);
 void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo) ;
 int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30]);
+
 int main()
 {
 
@@ -1455,4 +1456,34 @@ int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30])
         int validacion=-1;
         return validacion;
     }
+}
+
+stPelicula bajaPeliculas(nodoArbolPelicula *arbol,int id)  ///Permite modificar los valores de los campos de una pelicula
+{
+
+    nodoArbolPelicula * aux1;
+    stPelicula aux;
+
+    aux1=buscarPelicula(arbol,id);
+
+
+    aux1->p.eliminado = 1;
+
+  return aux1->p;
+}
+
+stUsuario eliminarUsuario(stCelda adl[],int *cant,int id})
+{
+    int pos = buscarUsuario(adl,id,cant);
+    stUsuario user = adl[pos].usr;
+    user.eliminado=1;
+
+    free(adl[pos]);
+    cant--;
+
+    return user;
+
+
+
+
 }
