@@ -64,12 +64,14 @@ typedef struct
 
 /// ------------------- FUNCIONES DE PELICULAS ---------------------------------
 //Alta
-///falta peinar
-stPelicula cargarPelicula();  ///Carga una pelicula y la retorna
+
+stPelicula cargarPelicula(char nombre_archivoPELI [])  ///Carga una pelicula y la retorna
 //Baja
 //Modificación
 void modificarPeliculas(nodoArbolPelicula *arbol,int id);  ///Permite modificar los valores de los campos de una pelicula
 void cargaPeliculaArchivo ( char nombre_archivo[], stPelicula nuevo); ///Carga una estructura de pelicula nuevo al archivo
+void sobreEscribirPeliEnArchivo(char nombre_archivo[],stPelicula nuevo);
+int validacionNombrePeliculaA(char nombre_archivoPELI[],char nombreAComparar[30]);
 /// ----------------------------TDA LISTA SIMPLE -------------------------------------------
 //inicLista()
 nodoListaPelicula * inicLista();
@@ -130,8 +132,9 @@ void cargaUsuarioArchivo ( char nombre_archivo[], stUsuario nuevo); ///Carga una
 void mostrarUsuario(stCelda adl);
 void mostrarListaPelisVistas(nodoListaPelicula *lista, nodoArbolPelicula *arbolPeliculas);
 void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula *arbolPeliculas);
-
-
+int cantidadElementoUsuarios(char nombre_archivo[]);
+void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo) ;
+int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30]);
 int main()
 {
 
@@ -463,35 +466,47 @@ int main()
 }
 
 //Alta
-///falta peinar
-stPelicula cargarPelicula()  ///Carga una pelicula y la retorna
+stPelicula cargarPelicula(char nombre_archivoPELI[]) /// carga una pelicula
 {
-    stPelicula aux;
-    printf("Nombre: ");
+    stPelicula xyz;
+    int correctoA=1;
+    puts("\n ------------------------------------------------");
+    xyz.idPelicula=cantidadPelisArchivo(nombre_archivoPELI)+1;
+    while (correctoA==1)
+    {
+        printf("\nIngrese nombre (en castellano) de la Pelicula: ");
+        fflush(stdin);
+        gets(&xyz.nombrePelicula);
+        correctoA=validacionNombrePeliculaA(nombre_archivoPELI,xyz.nombrePelicula);
+        if ((correctoA)!=0)
+        {
+            printf("Esa pelicula ya ha sido cargada.");
+        }
+    }
+    printf("\nIngrese director:                              ");
     fflush(stdin);
-    gets(&aux.nombrePelicula);
-    printf("Director: ");
+    gets(xyz.director);
+    printf("\nIngrese genero:                                ");
     fflush(stdin);
-    gets(&aux.director);
-    printf("Genero: ");
+    gets(xyz.genero);
+    printf("\nIngrese pais de la que proviene:               ");
     fflush(stdin);
-    gets(&aux.genero);
-    printf("Pais: ");
+    gets(xyz.pais);
+    printf("\nIngrese el anio de su estreno:                 ");
     fflush(stdin);
-    gets(&aux.pais);
-    printf("Anio: ");
+    scanf("%i",&xyz.anio);
+    printf("\nIngrese valoracion (segun IMDb):               ");
     fflush(stdin);
-    scanf("%i",&aux.anio);
-    printf("Valoracion(1-10): ");
+    scanf("%f",&xyz.valoracion);
+    printf("\nIngrese la calificacion (segun INCAA):          ");///"0": ATP, "13"/"16"/"18": "Mayores de 13/16/18"; Otro número: "Calificación pendiente."
     fflush(stdin);
-    scanf("%i",&aux.valoracion);
-    printf("PM(0,13,16,18): ");
-    fflush(stdin);
-    scanf("%i",&aux.pm);
-    aux.eliminado = 0;
-    return aux;
-}
+    scanf("%i",&xyz.pm);
+    puts("\n-------------------------------------------------");
+    xyz.eliminado=0;
 
+
+    return xyz;
+}
 //Modificación
 void modificarPeliculas(nodoArbolPelicula *arbol,int id)  ///Permite modificar los valores de los campos de una pelicula
 {
@@ -773,7 +788,8 @@ void mostrarPelicula(stPelicula aux) ///Muestra el contenido de una pelicula
     printf("PM: %i \n",aux.pm);
     printf("Eliminado: %i \n\n",aux.eliminado);
 }
-void mostrarPeliculaConNumeros(stPelicula aux){
+void mostrarPeliculaConNumeros(stPelicula aux)
+{
     printf("1 Nombre:     %s \n",aux.nombrePelicula);
     printf("2 Director:   %s \n",aux.director);
     printf("3 Genero:     %s   \n",aux.genero);
@@ -1092,13 +1108,16 @@ void pasarMatrixAString(char contrasenia[11],int contraseniaMatrix[2][5])
         }
     }
 }
-void pasarContraseniaAMatrix(char contrasenia[11],int contraseniaMatrix[2][5]){
+void pasarContraseniaAMatrix(char contrasenia[11],int contraseniaMatrix[2][5])
+{
     int fila;
     int columna;
     int i = 0;
 
-    for(columna=0;columna<5;columna++){
-        for(fila=0;fila<2;fila++){
+    for(columna=0; columna<5; columna++)
+    {
+        for(fila=0; fila<2; fila++)
+        {
             contraseniaMatrix[fila][columna] = contrasenia [i];
             i++;
         }
@@ -1155,13 +1174,32 @@ stUsuario cargarUsuario() ///genera un usuario, lo carga y lo retorna
     char temp[11];
     int auxMatrix[2][5];
     int i = 0;
+    int correcto=1;
+    int flag=1;
 
-    printf("Nombre y Apellido: ");
-    fflush(stdin);
-    gets(&user.nombreUsuario);
-    printf("Password (10 caracteres): ");
-    fflush(stdin);
-    gets(&temp);
+    user.idUsuario=cantidadElementoUsuarios(nombre_archivoUSER)+1;
+    while (correcto==1)
+    {
+        printf("Ingrese Nombre y Apellido: ");
+        fflush(stdin);
+        gets(&user.nombreUsuario);
+        correcto=validacionNombreArchivo(nombre_archivoUSER,nuevo.nombreUsuario);
+        if ((correcto)!=0)
+        {
+            printf("Usuario no disponible");
+        }
+    }
+    while (flag==1)
+    {
+        printf("Password (10 caracteres): ");
+        fflush(stdin);
+        gets(&temp);
+        if (strlen(temp)==10)
+        {
+            flag=0;
+        }
+    }
+
     pasarContraseniaAMatrix(temp,auxMatrix);
     encriptarContrasenia(auxMatrix,user.pass);
     printf("Anio de Nacimiento: ");
@@ -1312,5 +1350,109 @@ void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula *arbolPeliculas)
         mostrarUsuario(adl[i]);
         mostrarListaPelisVistas(adl[i].listaPelis,arbolPeliculas);
         printf("---------------------------------------------------------------------------");
+    }
+}
+
+void sobreEscribirPeliEnArchivo(char nombre_archivo[],stPelicula nuevo)
+{
+    stPelicula a;
+
+    FILE *archi;
+    archi=fopen(nombre_archivoPELI,"r+b");
+    if (archi!=NULL)
+    {
+        fseek(archi,sizeof(stPelicula)*(nuevo.idPelicula-1),SEEK_SET);
+        fread(&a,sizeof(stPelicula),1,archi);
+        a=nuevo;
+        fseek(archi,sizeof(stPelicula)*(nuevo.idPelicula-1),SEEK_SET);
+        fwrite(&a,sizeof(stPelicula),1,archi);
+        fclose(archi);
+    }
+}
+int validacionNombrePeliculaA(char nombre_archivoPELI[],char nombreAComparar[30])
+{
+    stPelicula comparador;
+    int flag=0;
+    FILE * archi;
+    archi=fopen(nombre_archivoPELI,"rb");
+
+    if (archi!=NULL)
+    {
+        while (!feof(archi) && flag==0)
+        {
+            fread(&comparador,sizeof(stPelicula),1,archi);
+            if (!feof(archi) && flag==0)
+            {
+                if (strcmpi(nombreAComparar,comparador.nombrePelicula)==0)
+                {
+                    flag=1;
+                }
+            }
+        }
+
+        return flag;
+    }
+    else
+    {
+        printf("No abrio.");
+        int validacion=-1;
+        return validacion;
+    }
+}
+int cantidadElementoUsuarios(char nombre_archivo[])
+{
+    FILE * archi;
+    int a=0;
+    archi=fopen(nombre_archivo, "rb");
+    if (archi!=NULL)
+    {
+        fseek(archi, 0, SEEK_END);
+        a = ftell(archi)/(sizeof(stUsuario));
+    }
+    return a;
+}
+void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo)
+{
+    stUsuario a;
+    FILE *archi;
+    archi=fopen(nombre_archivo,"r+b");
+    if (archi!=NULL)
+    {
+        fseek(archi,sizeof(stUsuario)*(nuevo.idUsuario-1),SEEK_SET);
+        fread(&a,sizeof(stUsuario),1,archi);
+        a=nuevo;
+        fseek(archi,sizeof(stUsuario)*(nuevo.idUsuario-1),SEEK_SET);
+        fwrite(&a,sizeof(stUsuario),1,archi);
+        fclose(archi);
+    }
+}
+int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30])
+{
+    stUsuario comparador;
+    int flag=0;
+    FILE * archi;
+    archi=fopen(nombre_archivoUSER,"rb");
+
+    if (archi!=NULL)
+    {
+        while (!feof(archi) && flag==0)
+        {
+            fread(&comparador,sizeof(stUsuario),1,archi);
+            if (!feof(archi) && flag==0)
+            {
+                if (strcmpi(nombreAComparar,comparador.nombreUsuario)==0)
+                {
+                    flag=1;
+                }
+            }
+        }
+
+        return flag;
+    }
+    else
+    {
+        printf("No abrio.");
+        int validacion=-1;
+        return validacion;
     }
 }
