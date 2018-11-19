@@ -138,10 +138,14 @@ void mostrarUsuarios(stCelda adl[],int cant, nodoArbolPelicula *arbolPeliculas);
 int cantidadElementoUsuarios(char nombre_archivo[]);
 void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo) ;
 int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30]);
-stUsuario eliminarUsuario(stCelda adl[],int *cant,int id);
+stUsuario eliminarUsuario(stCelda adl[],int cant,int id);
+int AgregarUnaCelda ( stUsuario nuevoUsr,stCelda*ArregloCeldas,int val);
+
 int main()
 {
 
+/// Archivos
+char nombre_archivo_user[30];
 
     ///SWITCH
 
@@ -158,6 +162,14 @@ int main()
     char continuarOpcionesAdminPeliculas = 's';
     int respuestaOpcionesAdminUsers=0;
     char continuarOpcionesAdminUsers = 's';
+
+   stCelda *ArregloCeldasUsuarios;
+   int validos_arreglo_Celdas;
+
+
+
+    stUsuario nuevoUsuario; /// usado para el case  3 de registro
+    stCelda nuevacelda; /// usado para el case 3 de registro
 
     ///Switch para pantalla inicial
 
@@ -451,11 +463,12 @@ int main()
             break;
 
         case 3: /// SIGN UP
+            nuevoUsuario=cargarUsuario(nombre_archivo_user);
+            cargaUsuarioArchivo(nombre_archivo_user,nuevoUsuario);
+            validos_arreglo_Celdas=AgregarUnaCelda(nuevoUsuario,ArregloCeldasUsuarios,validos_arreglo_Celdas);
 
-
-            ///llamar funcion de cadastrar usuarios
-            /// con ese usr nuevo relooccear el arreglo y agrregarlo al final
-
+            system("pause");
+            system("cls");
             break;
 
         default :
@@ -1417,7 +1430,8 @@ int cantidadElementoUsuarios(char nombre_archivo[])
     }
     return a;
 }
-void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo){
+void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo)
+{
 
     stUsuario a;
     FILE *archi;
@@ -1479,9 +1493,19 @@ stPelicula bajaPeliculas(nodoArbolPelicula *arbol,int id)  ///Permite modificar 
 
 stUsuario eliminarUsuario(stCelda adl[],int cant,int id)
 {
-    int pos = buscarUsuario(adl,id,*cant);
+    int pos = buscarUsuario(adl,id,cant);
     stUsuario user = adl[pos].usr;
     user.eliminado=1;
 
     return user;
+}
+int AgregarUnaCelda ( stUsuario nuevoUsr,stCelda*ArregloCeldas,int val)
+{
+    stCelda nuevaCelda;
+    nuevaCelda.usr=nuevoUsr;
+    nuevaCelda.listaPelis=NULL;
+    ArregloCeldas= (stCelda*)realloc(ArregloCeldas,sizeof(stCelda)*(val+1));
+    ArregloCeldas[val]=nuevaCelda;
+    val++;
+    return val;
 }
