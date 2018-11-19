@@ -185,10 +185,6 @@ int main()
     int respuestaOpcionesAdminUsers=0;
     char continuarOpcionesAdminUsers = 's';
 
-    stCelda *ArregloCeldasUsuarios;
-    int validos_arreglo_Celdas;
-
-    nodoArbolPelicula* ArbolDePeliculas=inicArbol();
 
 
 
@@ -197,13 +193,27 @@ int main()
 
 
 
-    stUsuario nuevoUsuario; /// usado para el case  3 de registro
-    stCelda nuevacelda; /// usado para el case 3 de registro
+
+
 
     ///Switch para pantalla inicial
 
     while(continuar == 's')
     {
+
+        stCelda *ArregloCeldasUsuarios;
+        int validos_arreglo_Celdas;
+
+        nodoArbolPelicula* ArbolDePeliculas=inicArbol();
+         stPelicula*arregloAuxiliarPeliculas= (stPelicula*)malloc(sizeof(stPelicula)*cantidadPelisArchivo(nombre_archivo_pelis));
+         int validos_arregloAuxiliarPeliculas=ArchivoAArreglo(nombre_archivo_pelis,arregloAuxiliarPeliculas);
+         ArbolDePeliculas=ArregloPelisToArbol(0,--validos_arregloAuxiliarPeliculas,validos_arregloAuxiliarPeliculas,ArbolDePeliculas,arregloAuxiliarPeliculas);
+
+
+
+
+         stUsuario nuevoUsuario; /// usado para el case  3 de registro
+    stCelda nuevacelda; /// usado para el case 3 de registro
 
         continuarOpcionesAdmin ='s';
         continuarOpcionesAdminPeliculas ='s';
