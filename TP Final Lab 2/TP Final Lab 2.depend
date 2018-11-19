@@ -1,6 +1,8 @@
 # depslib dependency file v1.0
-1542547813 source:c:\users\nico garcia\desktop\tp re final re ultimo re\tplaboratorio2\tp final lab 2\main.c
+1542664441 source:c:\users\nico garcia\desktop\tp re final re ultimo re\tplaboratorio2\tp final lab 2\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<conio.h>
+	<time.h>
 

@@ -1,14 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
+#include <time.h>
+#define MAX_BUF 50
+#define ESC 27
 
+
+///ARCHIVOS -----------------------------------------------
+char nombre_archivo_user[30]="USUARIOS.dat";
+char nombre_archivo_pelis[30]="PELICULAS.dat";
+char nombre_archivo_PelisVistas[30]="PELISVISTAS.dat";
 /// ------------------------- ESTRUCTURAS -----------------------------------
 
+const char *meses[] = {"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
+const char *dias[] = {"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"};
+void formatoFecha()
+{
+    char buf[MAX_BUF];
+    time_t seconds = time(NULL);
+    struct tm *now = localtime(&seconds);
+
+    (void) printf("%s, %s %d, %d\n", dias[now->tm_wday], meses[now->tm_mon], now->tm_mday, now->tm_year + 1900);
+    (void) strftime(buf, MAX_BUF, "%A, %B %e, %Y", now);
+    (void) printf("%s\n", buf);
+    return EXIT_SUCCESS;
+}
 typedef struct
 {
     int idPelicula;
     char nombrePelicula[60];
-    char director[30];
+    char director[40];
     char genero[20];
     char pais[20];
     int anio;
@@ -112,7 +134,7 @@ nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato);
 //cargarArbolDesdeArchivo()
 //auxiliar
 int cantidadPelisArchivo( char nombre_archivo_pelis[]);
-int ArchivoAArreglo ( char archivo[],stPelicula arreglito[]);
+int ArchivoAArreglo ( char archivo[],stPelicula *arreglito[]);
 nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[]);
 nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo_pelis[]);
 ///----------------------------FUNCIONES DE PELIS VISTAS---------------------------------------------
@@ -143,9 +165,9 @@ int AgregarUnaCelda ( stUsuario nuevoUsr,stCelda*ArregloCeldas,int val);
 
 int main()
 {
+    system("color 80");
+    formatoFecha();
 
-/// Archivos
-char nombre_archivo_user[30];
 
     ///SWITCH
 
@@ -163,8 +185,15 @@ char nombre_archivo_user[30];
     int respuestaOpcionesAdminUsers=0;
     char continuarOpcionesAdminUsers = 's';
 
-   stCelda *ArregloCeldasUsuarios;
-   int validos_arreglo_Celdas;
+    stCelda *ArregloCeldasUsuarios;
+    int validos_arreglo_Celdas;
+
+    nodoArbolPelicula* ArbolDePeliculas=inicArbol();
+
+
+
+
+
 
 
 
@@ -201,87 +230,138 @@ char nombre_archivo_user[30];
                  userValido = validacionUser();
              }
              if(userValido == 1) */
-        {
-            while(continuarOpcionesUser=='s')
+            int id_Usuario_Logueado;
+            int posicion_Usuario_Log;
             {
-
-                ///reseteamos las variables para poder utilizar la funcion volver en el switch
-                continuarOpcionesAdmin ='s';
-                continuarOpcionesAdminPeliculas ='s';
-                continuarOpcionesAdminUsers ='s';
-                continuarOpcionesUser ='s';
-
-
-
-                printf("1.PERFIL \n");
-
-                printf("2.PELICULAS \n");
-
-                printf("3.VER \n");
-
-                printf("4.RECOMENDACIONES \n");
-
-                printf("5.HISTORIAL \n");
-
-                printf("6.SALIR \n");
-
-                printf("ELIJA OPCION \n");
-
-                scanf("%d",&respuestaOpcionesUser);
-
-                system("cls");
-
-                switch(respuestaOpcionesUser)
+                while(continuarOpcionesUser=='s')
                 {
 
-                case 1: ///PERFIL
+                    ///reseteamos las variables para poder utilizar la funcion volver en el switch
+                    continuarOpcionesAdmin ='s';
+                    continuarOpcionesAdminPeliculas ='s';
+                    continuarOpcionesAdminUsers ='s';
+                    continuarOpcionesUser ='s';
 
-                    ///IMPRIME INFORMACION DEL USUARIO
-                    break;
+                    int Eleccion_Orden_De_Vista_Pelis;
+                    int ID_peliAVer;
+                    nodoArbolPelicula * PeliPorVer=inicArbol();
+                    stPelisVistas NuevaPeliculaVista;
+                    nodoListaPelicula * NuevaPeliVista=inicLista();
+                    stPelicula NuevaPeliPorVer;
 
-                case 2: ///PELICULAS
+                    posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
 
-                    ///SWITCH CON 2 OPCIONES TITULO O GENERO LUEGO MUESTRA LAS PELICULAS ORDENADAS
+                    printf("1.PERFIL \n");
 
-                    break;
+                    printf("2.PELICULAS \n");
 
-                case 3: /// VER
+                    printf("3.VER \n");
 
-                    ///FUNCION PARA ELEJIR UNA PELICULA Y VERLA, PODRIA ESTAR ADENTRO DE LA FUNCION ANTERIOR(A DEBATIR)
+                    printf("4.RECOMENDACIONES \n");
 
-                    break;
+                    printf("5.HISTORIAL \n");
 
-                case 4: /// RECOMENDACIONES
+                    printf("6.SALIR \n");
 
-                    ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
+                    printf("ELIJA OPCION \n");
 
-                    break;
+                    scanf("%d",&respuestaOpcionesUser);
 
-                case 5: /// HISTORIAL
+                    system("cls");
 
-                    /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
+                    switch(respuestaOpcionesUser)
+                    {
 
-                    break;
+                    case 1: ///PERFIL
 
-                case 6: /// Vuelve al menu anterior
-
-                    continuarOpcionesUser= 'n';
-
-
-
-                    break;
+                        ///IMPRIME INFORMACION DEL USUARIO
+                        posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
+                        mostrarUsuario(ArregloCeldasUsuarios[posicion_Usuario_Log]);
 
 
-                default:
+                        system("pause");
+                        system("cls");
 
-                    printf("opcion invalida\n");
+                        break;
 
-                    break;
+                    case 2: ///PELICULAS
+
+                        ///SWITCH CON 3 OPCIONES preorder , inorder y postorder LUEGO MUESTRA LAS PELICULAS ORDENADAS
+                        printf("\n Como desea ver el listado?: 1. [Preorder] 2.[Inorder] 3. [Postorder]: ");
+                        fflush(stdin);
+                        scanf("%d",&Eleccion_Orden_De_Vista_Pelis);
+                        switch(Eleccion_Orden_De_Vista_Pelis)
+                        {
+                        case 1:
+                            Recorriendo_preorder(ArbolDePeliculas);
+                            system("pause");
+                            system("cls");
+                            break;
+
+                        case 2:
+                            Recorriendo_inorder(ArbolDePeliculas);
+                            system("pause");
+                            system("cls");
+                            break;
+
+                        case 3:
+                            Recorriendo_postorder(ArbolDePeliculas);
+                            system("pause");
+                            system("cls");
+                            break;
+
+                        default:
+                            printf("\n Opcion invalida\n");
+
+                            break;
+
+                        }
+
+                        break;
+
+                    case 3: /// VER
+                        printf("\n Ingrese el ID de la pelicula que desea ver: ");
+                        fflush(stdin);
+                        scanf("%d", &ID_peliAVer);
+                        PeliPorVer=buscarPelicula(ArbolDePeliculas,ID_peliAVer);
+                        NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
+                        cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
+                        NuevaPeliPorVer=ArbolDePeliculas->p;
+                        NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
+                        ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
+
+
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    case 4: /// RECOMENDACIONES
+
+                        ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
+
+                        break;
+
+                    case 5: /// HISTORIAL
+
+                        /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
+                        posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
+                        mostrarListaPelisVistas(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,ArbolDePeliculas);
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    case 6: /// Vuelve al menu anterior
+
+                        continuarOpcionesUser= 'n';
+                        break;
+                    default:
+                        printf("opcion invalida\n");
+                        break;
+                    }
                 }
-            }
 
-        }
-        break;
+            }
+            break;
         ///==================================================================================================
 
 
@@ -959,7 +1039,7 @@ int cantidadPelisArchivo( char nombre_archivo_pelis[])
     return cant;
 }
 
-int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
+int ArchivoAArreglo ( char archivo[],stPelicula *arreglito [] )
 {
     int i=0;
 
@@ -971,7 +1051,7 @@ int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
         while (fread(&auxiliar,sizeof(stPelicula),1,archivo)>0)
         {
 
-            arreglito[i]=auxiliar;
+            *arreglito[i]=auxiliar;
             i++;
 
         }
