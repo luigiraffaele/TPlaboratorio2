@@ -81,6 +81,7 @@ typedef struct
     int idAutoincremental;
     int idUsuario;
     int idPelicula;
+    int eliminado; // documentar
 } stPelisVistas;
 
 
@@ -144,6 +145,7 @@ int cantidadPeliculasVistasArchi(char nombre_archivo[]);
 stPelisVistas crearNuevaPeliVista( int idUsr, int idPeli, char nombre_archivo_PelisVistas[]);
 void cargaPeliVistasArchivo ( char nombre_archivo[], stPelisVistas nuevo); ///Carga una estructura de pelivista nueva al archivo
 void  CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], int validos_Arreglo, char nombre_archivo[]); ///arreglo de usuarios ya cargado y recorre el archivo de pelisVistas a medidad que encuentra
+void EliminarPeliVistaArchivo (char nombre_archivo[],int id_Usr, int id_Peli );
 ///----------------------------------- FUNCIONES DE USUARIOS ------------------------------------------
 //Alta
 void pasarMatrixAString(char contrasenia[11],int contraseniaMatrix[2][5]);
@@ -342,13 +344,20 @@ int main()
                     fflush(stdin);
                     scanf("%d", &ID_peliAVer);
                     PeliPorVer=buscarPelicula(ArbolDePeliculas,ID_peliAVer);
+                    if( PeliPorVer->p.eliminado==0) /// si la pelicula llega a estar eliminada no la puede ver
+                    {
+
+
                     NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
                     cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
                     NuevaPeliPorVer=ArbolDePeliculas->p;
                     NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
                     ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
-
-
+                    }
+                    else
+                    {
+                        printf("Pelicula No disponible ");
+                    }
                     system("pause");
                     system("cls");
                     break;
@@ -358,6 +367,15 @@ int main()
                     ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
 
 
+                  if (ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis!=NULL) // tiene vistas
+                  {
+
+                  }
+                  else // no tiene vistas
+                  {
+
+
+                  }
                     break;
 
                 case 5: /// HISTORIAL
@@ -369,12 +387,16 @@ int main()
                     system("cls");
 
                     break;
-                case 6:
+                case 6: /// ELIMINAR UNA PELI VISTA
+
                     printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
                     fflush(stdin);
                     scanf("%d", &id_peliEliminarVistos);
-                    borrarNodo(id_peliEliminarVistos,ArregloCeldasUsuarios->listaPelis);
-
+                    ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis= borrarNodo(id_peliEliminarVistos,ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis);
+                    /// falta como borrarlo del archivo ya que el usuario seria como que no vio esa pelicula
+                    EliminarPeliVistaArchivo(nombre_archivo_PelisVistas,id_Usuario_Logueado,id_peliEliminarVistos);
+                    system("pause");
+                    system("cls");
                     break;
 
                 case 7: /// Vuelve al menu anterior
@@ -386,7 +408,6 @@ int main()
                     break;
                 }
             }
-
         }
         break;
         ///==================================================================================================
@@ -1178,6 +1199,7 @@ stPelisVistas crearNuevaPeliVista( int idUsr, int idPeli, char nombre_archivo_Pe
     nuevo.idAutoincremental=cantidadPeliculasVistasArchi(nombre_archivo_PelisVistas)+1 ;
     nuevo.idPelicula=idPeli;
     nuevo.idUsuario=idUsr;
+    nuevo.eliminado=0;
 
     return nuevo;
 }
@@ -1205,14 +1227,17 @@ void  CargaPeliVistaAlArregloUsr (nodoArbolPelicula*arbol, stCelda arreglo[], in
     {
         while (fread(&PeliVistaAux,sizeof(stPelisVistas),1,archi)>0)
         {
-            int pos= buscarUsuario(arreglo,PeliVistaAux.idUsuario,validos_Arreglo);
-            if (pos>-1)
+            if ( PeliVistaAux.eliminado==0)
             {
+                int pos= buscarUsuario(arreglo,PeliVistaAux.idUsuario,validos_Arreglo);
+                if (pos>-1)
+                {
 
-                nodoArbolPelicula* nodoAux=buscarPelicula(arbol,PeliVistaAux.idPelicula);
-                PeliculaAux=nodoAux->p;
-                nodoListaPelicula * nuevo=crearNodoListaPelicula(PeliculaAux);
-                arreglo[pos].listaPelis=agregarAlFinal(arreglo[pos].listaPelis,nodoAux);
+                    nodoArbolPelicula* nodoAux=buscarPelicula(arbol,PeliVistaAux.idPelicula);
+                    PeliculaAux=nodoAux->p;
+                    nodoListaPelicula * nuevo=crearNodoListaPelicula(PeliculaAux);
+                    arreglo[pos].listaPelis=agregarAlFinal(arreglo[pos].listaPelis,nodoAux);
+                }
             }
         }
         fclose(archi);
@@ -1461,8 +1486,6 @@ void mostrarListaPelisVistas(nodoListaPelicula *lista, nodoArbolPelicula *arbolP
         mostrarPelicula(aux->p);
         printf("\n");
         mostrarListaPelisVistas(lista->sig,arbolPeliculas);
-
-
     }
 
 }
@@ -1638,3 +1661,23 @@ void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda*arregloDeUsuario
         fclose(archi);
     }
 }
+void EliminarPeliVistaArchivo (char nombre_archivo[],int id_Usr, int id_Peli )
+{
+    stPelisVistas PeliVistaAux;
+    int flag=0;
+    FILE *archi;
+    archi=fopen(nombre_archivo,"rb");
+    if(archi!=NULL)
+    {
+        while ((fread(&PeliVistaAux,sizeof(stPelisVistas),1,archi)>0)&& (flag==0))
+        {
+            if (id_Usr==PeliVistaAux.idUsuario && id_Peli==PeliVistaAux.idPelicula )
+            {
+                PeliVistaAux.eliminado=1;
+                flag=1;
+            }
+        }
+        fclose(archi);
+    }
+}
+
