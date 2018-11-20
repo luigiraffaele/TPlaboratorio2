@@ -136,7 +136,7 @@ nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato); /// busc
 //cargarArbolDesdeArchivo()
 //auxiliar
 int cantidadPelisArchivo( char nombre_archivo[]); /// cantidad de peliculas en el archivo
-int ArchivoAArreglo ( char archivo[],stPelicula *arreglito[]);
+int ArchivoAArreglo ( char archivo[],stPelicula arreglito[]);
 nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[]);
 nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo_pelis[]);
 ///----------------------------FUNCIONES DE PELIS VISTAS---------------------------------------------
@@ -191,25 +191,16 @@ int main()
     char continuarOpcionesAdminUsers = 's';
 
 
-
-
-
-
-
-
-
-
-
-
     ///Switch para pantalla inicial
 
     while(continuar == 's')
     {
+
         ///Arreglo de Usuarios
         stCelda *ArregloCeldasUsuarios=(stCelda*) malloc(sizeof(stCelda)*cantidadElementoUsuarios(nombre_archivo_user));
         int validos_arreglo_Celdas;
-        ///Agregamos LasPelis Vistas de cada usuario a su respectiva celda
-        UsuarioDeArchivoAARREGLO(nombre_archivo_user,ArregloCeldasUsuarios,validos_arreglo_Celdas);
+
+        //UsuarioDeArchivoAARREGLO(nombre_archivo_user,ArregloCeldasUsuarios,validos_arreglo_Celdas);
 
         /// arbol de peliculas
 
@@ -219,8 +210,7 @@ int main()
 
         int validos_arregloAuxiliarPeliculas=ArchivoAArreglo(nombre_archivo_pelis,arregloAuxiliarPeliculas);
 
-        ArbolDePeliculas=ArregloPelisToArbol(0,--validos_arregloAuxiliarPeliculas,validos_arregloAuxiliarPeliculas,ArbolDePeliculas,arregloAuxiliarPeliculas);
-
+        //ArbolDePeliculas=ArregloPelisToArbol(0,--validos_arregloAuxiliarPeliculas,validos_arregloAuxiliarPeliculas,ArbolDePeliculas,arregloAuxiliarPeliculas);
 
 
         stUsuario nuevoUsuario; /// usado para el case  3 de registro
@@ -273,6 +263,15 @@ int main()
                 stPelicula NuevaPeliPorVer;
                 int id_peliEliminarVistos;
 
+
+
+                nodoArbolPelicula * Aux_Recom=inicArbol();
+                int valor;
+                srand(valor)=time(NULL);
+
+                int canti_Rec=0;
+                int id_Rec1=0;
+                int id_Rec2=0;
 
                 posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
 
@@ -371,18 +370,28 @@ int main()
 
                 case 4: /// RECOMENDACIONES
 
-                    ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
-
-
-                    if (ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis!=NULL) // tiene vistas
+                    while (canti_Rec<4)
                     {
 
-                    }
-                    else // no tiene vistas
-                    {
+                        if(canti_Rec==1)
+                        {
+                         id_Rec1=Aux_Recom->p.idPelicula;
+                        }
+                        if (canti_Rec==2)
+                        {
+                           id_Rec2=Aux_Recom->p.idPelicula;
+                        }
+                    valor=rand();
+                        Aux_Recom=buscarPelicula(ArbolDePeliculas,valor);
 
+                        if ( Aux_Recom->p.eliminado==0)
+                        {
+                            mostrarPelicula(Aux_Recom->p);
+                            canti_Rec++;
 
+                        }
                     }
+
                     break;
 
                 case 5: /// HISTORIAL
@@ -540,9 +549,6 @@ int main()
                             {
                                 mostrarPelicula(PeliPorVer->p);
                             }
-
-
-
                             system("pause");
                             system("cls");
                             break;
@@ -611,6 +617,22 @@ int main()
                         continuarOpcionesAdminUsers ='s';
                         continuarOpcionesUser ='s';
 
+                        ///Baja Usr
+                        int Id_Usr_BAJA;
+                        stUsuario Usr_Elim;
+
+                        ///Modificar Usr
+                        int   Id_Usr_Modf;
+                        int pos_usr_mod;
+                        stUsuario Usuario_Nombre;
+                        ///Consulta
+                        int  OpcionConsulta;
+                        int Consulta_ID;
+                        char Consulta_Palabra[15];
+                        int Pos_Usr_Consulta;
+                        /// Listado
+                        int pos_Usr_Listado=0;
+
                         printf("1.ALTA \n");
                         printf("2.BAJA \n");
                         printf("3.MODIFICAR \n");
@@ -628,22 +650,83 @@ int main()
 
                         case 1: ///alta usuarios
 
+                            nuevoUsuario=cargarUsuario(nombre_archivo_user);
+                            cargaUsuarioArchivo(nombre_archivo_user,nuevoUsuario);
+                            validos_arreglo_Celdas=AgregarUnaCelda(nuevoUsuario,ArregloCeldasUsuarios,validos_arreglo_Celdas);
+
                             break;
 
-                        case 2: ///baja usuarios
+                        case 2: ///baja usuarios  /// falta validar que ponga un id valido en la busqueda de usr
+
+                            printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
+                            fflush(stdin);
+                            scanf("%d", &Id_Usr_BAJA);
+                            Usr_Elim=eliminarUsuario(ArregloCeldasUsuarios,validos_arreglo_Celdas,Id_Usr_BAJA);
+                            sobreEscribirUsuarioEnArchivo(nombre_archivo_user,Usr_Elim);
+                            system("pause");
+                            system("cls");
 
                             break;
 
                         case 3: /// modificar usuarios
 
+                            printf("\n Ingrese el ID del Usuario que desee Modificar : ");
+                            fflush(stdin);
+                            scanf("%d", &Id_Usr_Modf);
+                            pos_usr_mod=buscarUsuario(ArregloCeldasUsuarios,Id_Usr_Modf,validos_arreglo_Celdas);
+                            modificarUsuario(ArregloCeldasUsuarios[pos_usr_mod].usr);
+                            sobreEscribirUsuarioEnArchivo(nombre_archivo_user,ArregloCeldasUsuarios[pos_usr_mod].usr);
+                            system("pause");
+                            system("cls");
                             break;
 
                         case 4: /// consultar usuarios
+                            printf("\n Consulta por: 1. Nombre 2.ID Usr ");
+                            fflush(stdin);
+                            scanf("%d", &OpcionConsulta);
 
+                            switch (OpcionConsulta)
+                            {
+                            case 1:
+                                printf("\n Ingrese  Nombre del Usuario : ");
+                                fflush(stdin);
+                                gets(&Consulta_Palabra);
+                                Usuario_Nombre=buscarUsuarioPorNombre(ArregloCeldasUsuarios,Consulta_Palabra,validos_arreglo_Celdas);
+                                Pos_Usr_Consulta=buscarUsuario(ArregloCeldasUsuarios,Usuario_Nombre.idUsuario,validos_arreglo_Celdas);
+                                mostrarUsuario(ArregloCeldasUsuarios[Pos_Usr_Consulta]);
+                                mostrarLista(ArregloCeldasUsuarios[Pos_Usr_Consulta].listaPelis);
+
+                                break;
+                            case 2:
+                                printf("\n Ingrese N° ID Usr : ");
+                                fflush(stdin);
+                                scanf("%d", &Consulta_ID);
+                                Pos_Usr_Consulta=buscarUsuario(ArregloCeldasUsuarios,Consulta_ID,validos_arreglo_Celdas);
+                                mostrarUsuario(ArregloCeldasUsuarios[Pos_Usr_Consulta]);
+                                mostrarLista(ArregloCeldasUsuarios[Pos_Usr_Consulta].listaPelis);
+
+                                break;
+                            default :
+                                printf("Opcion Invalida");
+                                break;
+                            }
+                            system("pause");
+                            system("cls");
                             break;
 
                         case 5: /// listados de usuarios
 
+                            while ( pos_Usr_Listado<validos_arreglo_Celdas)
+                            {
+                                mostrarUsuario(ArregloCeldasUsuarios[pos_Usr_Listado]);
+                                mostrarLista(ArregloCeldasUsuarios[pos_Usr_Listado].listaPelis);
+                                system("pause");
+                                system("cls");
+                                pos_Usr_Listado++;
+                            }
+
+                            system("pause");
+                            system("cls");
                             break;
 
                         case 6: /// volver
@@ -1179,7 +1262,7 @@ int cantidadPelisArchivo( char nombre_archivo[])
     return cant;
 }
 
-int ArchivoAArreglo ( char archivo[],stPelicula *arreglito [] )
+int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
 {
     int i=0;
 
@@ -1191,7 +1274,7 @@ int ArchivoAArreglo ( char archivo[],stPelicula *arreglito [] )
         while (fread(&auxiliar,sizeof(stPelicula),1,archivo)>0)
         {
 
-            *arreglito[i]=auxiliar;
+            arreglito[i]=auxiliar;
             i++;
 
         }
@@ -1250,7 +1333,7 @@ nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nomb
 
     return arbol;
 }
-/// provisorio
+
 int buscarUsuario(stCelda adl[],int id,int cant)
 {
     int i = 0;
