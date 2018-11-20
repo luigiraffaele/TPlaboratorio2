@@ -165,6 +165,8 @@ int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30]);
 stUsuario eliminarUsuario(stCelda adl[],int cant,int id);
 int AgregarUnaCelda ( stUsuario nuevoUsr,stCelda*ArregloCeldas,int val);
 void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda*arregloDeUsuarios [], int validos);
+int validacionUser(stCelda adl[],int cant);
+stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant);
 int main()
 {
     system("color 80");
@@ -348,11 +350,11 @@ int main()
                     {
 
 
-                    NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
-                    cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
-                    NuevaPeliPorVer=ArbolDePeliculas->p;
-                    NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
-                    ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
+                        NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
+                        cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
+                        NuevaPeliPorVer=ArbolDePeliculas->p;
+                        NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
+                        ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
                     }
                     else
                     {
@@ -367,15 +369,15 @@ int main()
                     ///ORDENA PELICULAS EN BASE A LO QUE FUE VISTO RECIENTEMENTE
 
 
-                  if (ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis!=NULL) // tiene vistas
-                  {
+                    if (ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis!=NULL) // tiene vistas
+                    {
 
-                  }
-                  else // no tiene vistas
-                  {
+                    }
+                    else // no tiene vistas
+                    {
 
 
-                  }
+                    }
                     break;
 
                 case 5: /// HISTORIAL
@@ -1681,3 +1683,58 @@ void EliminarPeliVistaArchivo (char nombre_archivo[],int id_Usr, int id_Peli )
     }
 }
 
+stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant)
+{
+    int i = 0;
+    int flag = 0;
+    stUsuario aux;
+
+    while(strcmp(adl[i].usr.nombreUsuario,nombre)!= 0)
+    {
+        i++;
+        if(strcmp(adl[i].usr.nombreUsuario,nombre)= 0)
+        {
+            flag = 1;
+            aux = adl[i].usr;
+        }
+
+        if(flag == 0)
+        {
+            i=-1;
+        }
+    }
+    return aux;
+}
+int validacionUser(stCelda adl[],int cant)
+{
+    char username[30];
+    char contrasenia[11];
+    int valido = -1;
+    char pass[11];
+    int passMatrix[2][5];
+    int control = 1;
+    stUsuario aux;
+
+    system("cls");
+    printf("\n USERNAME: ");
+    fflush(stdin);
+    gets(&username);
+    printf(" PASSWORD: ");
+    fflush(stdin);
+    gets(&contrasenia);
+
+    aux = buscarUsuarioPorNombre(adl,username,cant);
+    if(strcmpi(aux.nombreUsuario,username)==0)
+    {
+        desencriptarContrasenia(aux.pass,passMatrix);
+        pasarMatrixAString(pass,passMatrix);
+        if (strcmpi(pass,contrasenia)==0)
+        {
+            valido=aux.idUsuario;
+        }
+    }
+
+
+
+    return valido;
+}
