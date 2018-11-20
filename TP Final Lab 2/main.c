@@ -88,53 +88,54 @@ typedef struct
 /// ------------------- FUNCIONES DE PELICULAS ---------------------------------
 //Alta
 
-stPelicula cargarPelicula(char nombre_archivoPELI []);  ///Carga una pelicula y la retorna
+stPelicula cargarPelicula(char nombre_archivoPELI []);  ///Carga una pelicula de 0 y la retorna su estructura
 //Baja
 //Modificación
 void modificarPeliculas(nodoArbolPelicula *arbol,int id);  ///Permite modificar los valores de los campos de una pelicula
 void cargaPeliculaArchivo ( char nombre_archivo[], stPelicula nuevo); ///Carga una estructura de pelicula nuevo al archivo
-void sobreEscribirPeliEnArchivo(char nombre_archivo[],stPelicula nuevo);
-int validacionNombrePeliculaA(char nombre_archivoPELI[],char nombreAComparar[30]);
+void sobreEscribirPeliEnArchivo(char nombre_archivo[],stPelicula nuevo); /// pide la nueva estructura con los cambios de un usuario y el archivo , modifica el usuario guardado en el archivo sobreescribiendolo
+int validacionNombrePeliculaA(char nombre_archivoPELI[],char nombreAComparar[60]); /// valida el nombre de una pelicula nueva para que no se repita
 
 /// ----------------------------TDA LISTA SIMPLE -------------------------------------------
 //inicLista()
 nodoListaPelicula * inicLista();
 //crearNodoLista()
-nodoListaPelicula * crearNodoListaPelicula(stPelicula pelicula);
+nodoListaPelicula * crearNodoListaPelicula(stPelicula pelicula); /// pide una pelicula y retorna un nodo de lista
 //agregarAlPrincipio
-nodoListaPelicula * agregarAlPrincipio(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo);
+nodoListaPelicula * agregarAlPrincipio(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo); /// agrega al principio de la lista
 //agregarAlFinal()
-nodoListaPelicula * agregarAlFinal(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo);
+nodoListaPelicula * agregarAlFinal(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo); /// agrega al final de la lista de la celda
 //agregarEnOrdenPorNombreDePelicula()
-nodoListaPelicula * agregarEnOrden(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo);
+nodoListaPelicula * agregarEnOrden(nodoListaPelicula * lista, nodoListaPelicula * nuevoNodo); /// agrega en orden en una lista
 //mostrarLista()
-void mostrarLista(nodoListaPelicula * lista);
+void mostrarLista(nodoListaPelicula * lista); /// recorre y muestra todas las peliculas de la lista de una celda usuario
 //borrarNodoPorIdPelicula()
-nodoListaPelicula * borrarNodo(int idPelicula, nodoListaPelicula * lista);
+nodoListaPelicula * borrarNodo(int idPelicula, nodoListaPelicula * lista); /// borra una pelicula de una lista de pelis vistas
 
 ///---------------------------------------- TDA ARBOL --------------------------------------------
 //inicArbol()
 nodoArbolPelicula* inicArbol ();
 //crearNodoArbol()
-nodoArbolPelicula * crearNodoArbol(stPelicula pelicula);
+nodoArbolPelicula * crearNodoArbol(stPelicula pelicula); /// pide una pelicula y retorna un nodo para el arbol
 //insertarNodoArbol (ordenado por idPelicula)
-nodoArbolPelicula* insertarNodoArbol (nodoArbolPelicula* arbol, stPelicula nuevo);
+nodoArbolPelicula* insertarNodoArbol (nodoArbolPelicula* arbol, stPelicula nuevo); /// inserta en orden en un arbol comparando idS
 //mostrarArbol (son tres funciones, recorriendo inOrder, postOrder, preOrder)
 void mostrarPelicula(stPelicula aux); ///Muestra el contenido de una pelicula
-void mostrarPeliculaConNumeros(stPelicula aux);
+void mostrarPeliculaConNumeros(stPelicula aux); /// lo mismo que mostrar pelicula pero con indice por campo
+/// recorridos del arbol
 void Recorriendo_preorder (nodoArbolPelicula*arbol);
 void Recorriendo_inorder ( nodoArbolPelicula*arbol);
 void Recorriendo_postorder (nodoArbolPelicula * arbol);
-stPelicula bajaPeliculas(nodoArbolPelicula *arbol,int id);
+stPelicula bajaPeliculas(nodoArbolPelicula *arbol,int id); /// modifica el campo eliminado en una pelicula del arbol
 //borrarUnNodoArbol (buscarlo por idPelicula)
 //auxiliares
 nodoArbolPelicula * buscar_nodo_mas_derech(nodoArbolPelicula*arbol);
 nodoArbolPelicula * buscar_nodo_mas_izqu(nodoArbolPelicula*arbol);
 nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol); /// el dato es el id de la pelicula por borrar
-nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato);
+nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato); /// busca una pelicula por ID , o retorna el nodo o retorna NULL
 //cargarArbolDesdeArchivo()
 //auxiliar
-int cantidadPelisArchivo( char nombre_archivo_pelis[]);
+int cantidadPelisArchivo( char nombre_archivo[]); /// cantidad de peliculas en el archivo
 int ArchivoAArreglo ( char archivo[],stPelicula *arreglito[]);
 nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[]);
 nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo_pelis[]);
@@ -1072,13 +1073,13 @@ nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato)
 }
 //cargarArbolDesdeArchivo()
 //auxiliar
-int cantidadPelisArchivo( char nombre_archivo_pelis[])
+int cantidadPelisArchivo( char nombre_archivo[])
 {
     int cant;
     stPelicula aux;
 
     FILE *archi=NULL;
-    archi=fopen(nombre_archivo_pelis,"rb");
+    archi=fopen(nombre_archivo,"rb");
     if (archi!=NULL)
     {
         fseek(archi, 0, SEEK_END);
