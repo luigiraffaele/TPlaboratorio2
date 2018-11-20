@@ -205,7 +205,7 @@ int main()
         /// arbol de peliculas
 
         nodoArbolPelicula* ArbolDePeliculas=inicArbol();
-        ArbolDePeliculas=cargarArbolDesdeArchivo(ArbolDePeliculas,nombre_archivo_pelis);
+       // ArbolDePeliculas=cargarArbolDesdeArchivo(ArbolDePeliculas,nombre_archivo_pelis);
 
         //stPelicula*arregloAuxiliarPeliculas= (stPelicula*)malloc(sizeof(stPelicula)*(cantidadPelisArchivo(nombre_archivo_pelis)));
 
@@ -268,7 +268,7 @@ int main()
 
                 nodoArbolPelicula * Aux_Recom=inicArbol();
                 int valor;
-                srand(time(NULL);
+                srand(time(NULL));
 
                 int canti_Rec=0;
                 int id_Rec1=0;
@@ -371,7 +371,7 @@ int main()
 
                 case 4: /// RECOMENDACIONES
 
-                    while (canti_Rec<4)
+                    while (canti_Rec<3)
                     {
 
                         if(canti_Rec==1)
