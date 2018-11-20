@@ -136,8 +136,8 @@ nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato); /// busc
 //cargarArbolDesdeArchivo()
 //auxiliar
 int cantidadPelisArchivo( char nombre_archivo[]); /// cantidad de peliculas en el archivo
-int ArchivoAArreglo ( char archivo[],stPelicula arreglito[]);
-nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[]);
+int ArchivoAArreglo ( char archivo[],stPelicula arreglito[]); /// De archivo de pelis al arreglo de pelis aux
+nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[]); ///Del arreglo de Pelis aux al arbol
 nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo_pelis[]);
 ///----------------------------FUNCIONES DE PELIS VISTAS---------------------------------------------
 
@@ -205,10 +205,11 @@ int main()
         /// arbol de peliculas
 
         nodoArbolPelicula* ArbolDePeliculas=inicArbol();
+        ArbolDePeliculas=cargarArbolDesdeArchivo(ArbolDePeliculas,nombre_archivo_pelis);
 
-        stPelicula*arregloAuxiliarPeliculas= (stPelicula*)malloc(sizeof(stPelicula)*(cantidadPelisArchivo(nombre_archivo_pelis)));
+        //stPelicula*arregloAuxiliarPeliculas= (stPelicula*)malloc(sizeof(stPelicula)*(cantidadPelisArchivo(nombre_archivo_pelis)));
 
-        int validos_arregloAuxiliarPeliculas=ArchivoAArreglo(nombre_archivo_pelis,arregloAuxiliarPeliculas);
+        //int validos_arregloAuxiliarPeliculas=ArchivoAArreglo(nombre_archivo_pelis,arregloAuxiliarPeliculas);
 
         //ArbolDePeliculas=ArregloPelisToArbol(0,--validos_arregloAuxiliarPeliculas,validos_arregloAuxiliarPeliculas,ArbolDePeliculas,arregloAuxiliarPeliculas);
 
@@ -267,7 +268,7 @@ int main()
 
                 nodoArbolPelicula * Aux_Recom=inicArbol();
                 int valor;
-                srand(valor)=time(NULL);
+                srand(time(NULL);
 
                 int canti_Rec=0;
                 int id_Rec1=0;
@@ -375,13 +376,13 @@ int main()
 
                         if(canti_Rec==1)
                         {
-                         id_Rec1=Aux_Recom->p.idPelicula;
+                            id_Rec1=Aux_Recom->p.idPelicula;
                         }
                         if (canti_Rec==2)
                         {
-                           id_Rec2=Aux_Recom->p.idPelicula;
+                            id_Rec2=Aux_Recom->p.idPelicula;
                         }
-                    valor=rand();
+                         valor=rand()%cantidadPelisArchivo(nombre_archivo_pelis);
                         Aux_Recom=buscarPelicula(ArbolDePeliculas,valor);
 
                         if ( Aux_Recom->p.eliminado==0)
@@ -490,13 +491,17 @@ int main()
                         ///Listados
                         int Orden_De_Vista_Pelis;
 
+                        ///BORRAR NODO
+                        int Id_Peli_BORRAR;
+                        nodoArbolPelicula* PELI_BORRAR;
 
                         printf("1.ALTA \n");
                         printf("2.BAJA \n");
                         printf("3.MODIFICAR \n");
                         printf("4.CONSULTA \n");
                         printf("5.LISTADOS \n");
-                        printf("6. VOLVER \n");
+                        printf("6. BORRARNODO  \n");
+                        printf("7. VOLVER \n");
                         printf("ELIJA UNA OPCION \n");
 
                         scanf("%d",&respuestaOpcionesAdminPeliculas);
@@ -588,7 +593,19 @@ int main()
 
                             break;
 
-                        case 6: /// Vuelve al menu anterior
+                        case 6:/// borrar nodo
+                            printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
+                            fflush(stdin);
+                            scanf("%d", &Id_Peli_BORRAR);
+                            PELI_BORRAR=borrarUnNodoArbol(Id_Peli_BORRAR,ArbolDePeliculas);
+                            if ( PELI_BORRAR!=NULL)
+                            {
+                                mostrarPelicula(PELI_BORRAR->p);
+                            }
+                            system("pause");
+                            system("cls");
+                            break;
+                        case 7: /// Vuelve al menu anterior
 
                             continuarOpcionesAdminPeliculas= 'n';
 
@@ -1321,13 +1338,13 @@ nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoAr
     rta=arbol;
     return rta;
 }
-nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo_pelis[])
+nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo[])
 {
 
     stPelicula aux;
-    int cant= cantidadPelisArchivo(nombre_archivo_pelis);
+    int cant= cantidadPelisArchivo(nombre_archivo);
     stPelicula arregloAux[cant];
-    int validos_arreglo=ArchivoAArreglo(nombre_archivo_pelis,arregloAux);
+    int validos_arreglo=ArchivoAArreglo(nombre_archivo,arregloAux);
     arbol=ArregloPelisToArbol(0,validos_arreglo,validos_arreglo+1,arbol,arregloAux);
 
 
