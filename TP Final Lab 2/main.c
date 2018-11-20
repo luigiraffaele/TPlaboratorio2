@@ -1693,7 +1693,7 @@ stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant)
     while(strcmp(adl[i].usr.nombreUsuario,nombre)!= 0)
     {
         i++;
-        if(strcmp(adl[i].usr.nombreUsuario,nombre)= 0)
+        if(strcmp(adl[i].usr.nombreUsuario,nombre)== 0)
         {
             flag = 1;
             aux = adl[i].usr;
