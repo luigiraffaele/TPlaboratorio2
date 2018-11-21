@@ -165,11 +165,43 @@ void sobreEscribirUsuarioEnArchivo(char nombre_archivo[],stUsuario nuevo) ;
 int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30]);
 stUsuario eliminarUsuario(stCelda adl[],int cant,int id);
 int AgregarUnaCelda ( stUsuario nuevoUsr,stCelda*ArregloCeldas,int val);
-void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda *arregloDeUsuarios []);
+void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda *arregloDeUsuarios);
 int validacionUser(stCelda adl[],int cant);
 stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant);
 int cantidadUsuariosActivosArchivo(char nombre_archivo[]);
 
+nodoArbolPelicula * pasaje (nodoArbolPelicula * arbol, stPelicula * Arreglito, int cantidad)
+{
+
+
+    int medio;
+
+    if (cantidad%2==0)
+    {
+        medio = cantidad/2 ;
+    }
+    else
+    {
+        medio=(cantidad/2)+1;
+    }
+
+    arbol= insertarNodoArbol(arbol,Arreglito[medio]);
+    int i=cantidad-1;
+    while ( i>medio &&i<cantidad)
+    {
+        arbol=insertarNodoArbol(arbol,Arreglito[i]);
+        i--;
+    }
+
+    while ( i>-1)
+    {
+        arbol=insertarNodoArbol(arbol,Arreglito[i]);
+        i--;
+    }
+
+
+    return arbol ;
+}
 int main()
 {
     system("color 80");
@@ -202,19 +234,19 @@ int main()
         ///Arreglo de Usuarios
         int validos_arreglo_Celdas=cantidadUsuariosActivosArchivo(nombre_archivo_user);
 
-        stCelda ArregloCeldasUsuarios[cantidadUsuariosActivosArchivo(nombre_archivo_user)];
+        stCelda *ArregloCeldasUsuarios =(stCelda*) malloc(sizeof(stCelda)*validos_arreglo_Celdas);
 
         UsuarioDeArchivoAARREGLO(nombre_archivo_user,ArregloCeldasUsuarios);
 
 
-            mostrarUsuario(ArregloCeldasUsuarios[0]);
-            mostrarUsuario(ArregloCeldasUsuarios[1]);
+
         /// arbol de peliculas
 
         nodoArbolPelicula* ArbolDePeliculas=inicArbol();
 
-        //ArbolDePeliculas=cargarArbolDesdeArchivo(ArbolDePeliculas,nombre_archivo_pelis);
 
+
+        ArbolDePeliculas=cargarArbolDesdeArchivo(ArbolDePeliculas,nombre_archivo_pelis);
 
 
 
@@ -355,7 +387,7 @@ int main()
                         fflush(stdin);
                         scanf("%d", &ID_peliAVer);
                         PeliPorVer=buscarPelicula(ArbolDePeliculas,ID_peliAVer);
-                        if( PeliPorVer->p.eliminado==0) /// si la pelicula llega a estar eliminada no la puede ver
+                        if(PeliPorVer!=NULL && PeliPorVer->p.eliminado==0) /// si la pelicula llega a estar eliminada no la puede ver
                         {
                             NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
                             cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
@@ -1282,7 +1314,7 @@ int cantidadPelisArchivo( char nombre_archivo[])
     return cant;
 }
 
-int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
+int ArchivoAArreglo ( char archivo[],stPelicula *arreglito )
 {
     int i=0;
 
@@ -1291,7 +1323,7 @@ int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
     archi=fopen(archivo,"rb");
     if(archi!=NULL)
     {
-        while (fread(&auxiliar,sizeof(stPelicula),1,archivo)>0)
+        while (fread(&auxiliar,sizeof(stPelicula),1,archi)>0)
         {
 
             arreglito[i]=auxiliar;
@@ -1306,14 +1338,15 @@ int ArchivoAArreglo ( char archivo[],stPelicula arreglito [] )
 
 
 
-nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[] )
+nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula * pelis )
 {
     int nuevofin=fin;
     int nuevoinic=inic;
     int aux;
     nodoArbolPelicula * rta;
     int medio;
-    if (cantidad>0)
+
+    if(cantidad>0)
     {
         if (cantidad%2==0)
         {
@@ -1324,15 +1357,25 @@ nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoAr
             medio=(cantidad/2)+1;
         }
 
+
         arbol=insertarNodoArbol(arbol,pelis[medio]);
         cantidad--;
 
+        printf("valor medio %d ", medio);
+        printf("valor cant %d ", cantidad);
+        system("pause");
         nuevofin=medio-1;
         arbol->izq=ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis); // primero para la izquierda)
+
+        printf("valor medio %d ", medio);
+        printf("valor cant %d ", cantidad);
 
         nuevoinic = medio+1;
         nuevofin=fin;
         arbol->der=ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis); // ahora a la derecha
+
+        printf("valor medio %d ", medio);
+        printf("valor cant %d ", cantidad);
     }
     else
     {
@@ -1344,11 +1387,16 @@ nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoAr
 nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo[])
 {
 
-    stPelicula aux;
-    int cant= cantidadPelisArchivo(nombre_archivo);
-    stPelicula arregloAux[cant];
-    int validos_arreglo=ArchivoAArreglo(nombre_archivo,arregloAux);
-    arbol=ArregloPelisToArbol(0,validos_arreglo,validos_arreglo+1,arbol,arregloAux);
+    int cant=cantidadPelisArchivo(nombre_archivo);
+    stPelicula * arregloAux= (stPelicula*)malloc(sizeof(stPelicula)*cant);
+
+    int validos_arreglo= ArchivoAArreglo(nombre_archivo,arregloAux);
+
+ arbol=pasaje(arbol,arregloAux,cant);
+
+
+    ///arbol=ArregloPelisToArbol(0,--validos_arreglo,validos_arreglo,arbol,arregloAux);
+
 
 
     return arbol;
@@ -1674,7 +1722,6 @@ void mostrarUsuario(stCelda adl)
 }
 void mostrarListaPelisVistas(nodoListaPelicula *lista, nodoArbolPelicula *arbolPeliculas)
 {
-
     if(lista != NULL)
     {
         nodoArbolPelicula * aux = buscarPelicula(arbolPeliculas,lista->p.idPelicula);
@@ -1834,7 +1881,7 @@ int AgregarUnaCelda ( stUsuario nuevoUsr,stCelda*ArregloCeldas,int val)
     return val;
 }
 
-void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda arregloDeUsuarios [])
+void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda *arregloDeUsuarios )
 {
     stUsuario aux;
     stCelda auxiliarCelda;
@@ -1845,11 +1892,14 @@ void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda arregloDeUsuario
     {
         while (fread(&aux,sizeof(stUsuario),1,archi)>0)
         {
-            if (aux.idUsuario==0 )
+
+            if (aux.eliminado==0 )
             {
+
                 auxiliarCelda.usr=aux;
-                auxiliarCelda.listaPelis=NULL;
+                auxiliarCelda.listaPelis=inicLista();
                 arregloDeUsuarios[i]=auxiliarCelda;
+
                 i++;
             }
 
@@ -1952,3 +2002,4 @@ int cantidadUsuariosActivosArchivo(char nombre_archivo[])
     }
     return a;
 }
+
