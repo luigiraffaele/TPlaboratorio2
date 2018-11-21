@@ -696,8 +696,10 @@ int main()
                             printf("\n Ingrese el ID del Usuario que desee Modificar : ");
                             fflush(stdin);
                             scanf("%d", &Id_Usr_Modf);
-                            pos_usr_mod=buscarUsuario(ArregloCeldasUsuarios,Id_Usr_Modf,validos_arreglo_Celdas);
-                            modificarUsuario(ArregloCeldasUsuarios[pos_usr_mod].usr);
+
+                            pos_usr_mod=buscarUsuario(ArregloCeldasUsuarios,Id_Usr_Modf,--validos_arreglo_Celdas);
+                            mostrarUsuarioConNumeros(ArregloCeldasUsuarios[pos_usr_mod].usr);
+                            modificarUsuario(ArregloCeldasUsuarios,pos_usr_mod);
                             sobreEscribirUsuarioEnArchivo(nombre_archivo_user,ArregloCeldasUsuarios[pos_usr_mod].usr);
                             system("pause");
                             system("cls");
@@ -1652,7 +1654,7 @@ void cargaUsuarioArchivo ( char nombre_archivo[], stUsuario nuevo) ///Carga una 
     }
 }
 
-void modificarUsuario(stCelda aux[], int pos)
+void modificarUsuario(stUsuario *aux) ///Permite modificar el contenido de cada campo del usuario
 {
     int flag = 0;
     int opcion;
@@ -1660,12 +1662,13 @@ void modificarUsuario(stCelda aux[], int pos)
     char temp[11]; ///cambie 10por11
     int auxMatrix[2][5];
 
-    stUsuario auxiliar=aux[pos].usr;
+
+
 
     while(continuar == 's')
     {
         printf("= Modificar Usuario =\n\n");
-        mostrarUsuarioConNumeros(auxiliar);
+        mostrarUsuarioConNumeros(*aux);
         printf("Opcion: ");
         scanf("%i",&opcion);
 
@@ -1674,35 +1677,35 @@ void modificarUsuario(stCelda aux[], int pos)
         case 1:
             printf("Nombre: ");
             fflush(stdin);
-            gets(&auxiliar.nombreUsuario);
+            gets(&aux->nombreUsuario);
             break;
         case 2:
             printf("Pass (10 caracteres): ");
             fflush(stdin);
             gets(&temp);
             pasarContraseniaAMatrix(temp,auxMatrix);
-            encriptarContrasenia(auxMatrix,auxiliar.pass);
+            encriptarContrasenia(auxMatrix,aux->pass);
 
             break;
         case 3:
             printf("Genero: ");
             fflush(stdin);
-            auxiliar.genero=getch();
+            gets(&aux->genero);
             break;
         case 4:
             printf("Nacimiento: ");
-            scanf("%i",&auxiliar.anioNacimiento);
+            scanf("%i",&aux->anioNacimiento);
             break;
         case 5:
             printf("Pais: ");
             fflush(stdin);
-            gets(&auxiliar.pais);
+            gets(&aux->pais);
             break;
 
         case 6:
             printf("Admin: 0:No 1:Si ");
             fflush(stdin);
-            scanf("%d",&auxiliar.admin);
+            scanf("%d",&aux->admin);
             break;
 
         }
@@ -1710,8 +1713,6 @@ void modificarUsuario(stCelda aux[], int pos)
         fflush(stdin);
         scanf("%c",&continuar);
         system("cls");
-        printf( "LLEGO");
-        aux[pos].usr=auxiliar;
     }
 
 }
