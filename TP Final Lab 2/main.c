@@ -166,10 +166,10 @@ int validacionNombreArchivo(char nombre_archivoUSER[],char nombreAComparar[30]);
 stUsuario eliminarUsuario(stCelda adl[],int cant,int id);
 int AgregarUnaCelda ( stUsuario nuevoUsr,stCelda*ArregloCeldas,int val);
 void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda *arregloDeUsuarios);
-int validacionUser(stCelda adl[],int cant);
+int validacionUser(char fileU[]);
 stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant);
 int cantidadUsuariosActivosArchivo(char nombre_archivo[]);
-int validacionAdmin(stCelda adl[],int cant);
+int validacionAdmin(char fileU[]);
 
 nodoArbolPelicula * pasaje (nodoArbolPelicula * arbol, stPelicula * Arreglito, int cantidad)
 {
@@ -276,8 +276,11 @@ int main()
 
             while(id_Usuario_Logueado == -1)
             {
-                id_Usuario_Logueado = validacionUser(ArregloCeldasUsuarios,validos_arreglo_Celdas);
+                id_Usuario_Logueado = validacionUser(nombre_archivo_user);
             }
+
+            system("pause");
+            system("cls");
 
             while(continuarOpcionesUser=='s')
             {
@@ -474,7 +477,7 @@ int main()
 
             while(id_Usuario_Logueado == -1)
             {
-                id_Usuario_Logueado = validacionAdmin(ArregloCeldasUsuarios,validos_arreglo_Celdas);
+                id_Usuario_Logueado = validacionAdmin(nombre_archivo_user);
             }
 
             system("pause");
@@ -1995,7 +1998,7 @@ stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant)
     }
     return aux;
 }
-int validacionUser(stCelda adl[],int cant)
+int validacionUser(char fileU[])
 {
     char username[30];
     char contrasenia[11];
@@ -2013,18 +2016,24 @@ int validacionUser(stCelda adl[],int cant)
     fflush(stdin);
     gets(&contrasenia);
 
-    aux = buscarUsuarioPorNombre(adl,username,cant);
-    if(strcmpi(aux.nombreUsuario,username)==0)
-    {
-        desencriptarContrasenia(aux.pass,passMatrix);
-        pasarMatrixAString(pass,passMatrix);
-        if (strcmpi(pass,contrasenia)==0)
-        {
-            valido=aux.idUsuario;
+    FILE*archi = NULL;
+    archi = fopen(fileU,"rb");
+    if(archi != NULL){
+        while(control>0 && valido<0){
+            control = fread(&aux,sizeof(stUsuario),1,archi);
+            if(strcmpi(aux.nombreUsuario,username)==0){
+                desencriptarContrasenia(aux.pass,passMatrix);
+                pasarMatrixAString(pass,passMatrix);
+                if (strcmpi(pass,contrasenia)==0){
+                    valido=aux.idUsuario;
+                }
+            }
         }
     }
+    fclose(archi);
     return valido;
 }
+
 
 int cantidadUsuariosActivosArchivo(char nombre_archivo[])
 {
@@ -2046,7 +2055,7 @@ int cantidadUsuariosActivosArchivo(char nombre_archivo[])
     return a;
 }
 
-int validacionAdmin(stCelda adl[],int cant)
+int validacionAdmin(char fileU[])
 {
     char username[30];
     char contrasenia[11];
@@ -2064,15 +2073,21 @@ int validacionAdmin(stCelda adl[],int cant)
     fflush(stdin);
     gets(&contrasenia);
 
-    aux = buscarUsuarioPorNombre(adl,username,cant);
-    if(strcmpi(aux.nombreUsuario,username)==0)
-    {
-        desencriptarContrasenia(aux.pass,passMatrix);
-        pasarMatrixAString(pass,passMatrix);
-        if (strcmpi(pass,contrasenia)==0 && (aux.admin)==1)
-        {
-            valido=aux.idUsuario;
+    FILE*archi = NULL;
+    archi = fopen(fileU,"rb");
+    if(archi != NULL){
+        while(control>0 && valido<0){
+            control = fread(&aux,sizeof(stUsuario),1,archi);
+            if(strcmpi(aux.nombreUsuario,username)==0){
+                desencriptarContrasenia(aux.pass,passMatrix);
+                pasarMatrixAString(pass,passMatrix);
+                if (strcmpi(pass,contrasenia)==0){
+                    if(aux.admin==1)
+                    valido=aux.idUsuario;
+                }
+            }
         }
     }
+    fclose(archi);
     return valido;
 }
