@@ -129,9 +129,9 @@ void Recorriendo_postorder (nodoArbolPelicula * arbol);
 stPelicula bajaPeliculas(nodoArbolPelicula *arbol,int id); /// modifica el campo eliminado en una pelicula del arbol
 //borrarUnNodoArbol (buscarlo por idPelicula)
 //auxiliares
-nodoArbolPelicula * buscar_nodo_mas_derech(nodoArbolPelicula*arbol);
-nodoArbolPelicula * buscar_nodo_mas_izqu(nodoArbolPelicula*arbol);
-nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol); /// el dato es el id de la pelicula por borrar
+nodoArbolPelicula * NMD (nodoArbolPelicula * arbol);
+nodoArbolPelicula * NMI (nodoArbolPelicula * arbol);
+nodoArbolPelicula * borrarNodoArbol (nodoArbolPelicula * arbol, int dato); /// el dato es el id de la pelicula por borrar
 nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato); /// busca una pelicula por ID , o retorna el nodo o retorna NULL
 //cargarArbolDesdeArchivo()
 //auxiliar
@@ -254,12 +254,12 @@ int main()
 
 
                 int posicion_Usuario_Log;
-                // posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
+                posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
                 int Eleccion_Orden_De_Vista_Pelis;
                 int ID_peliAVer;
                 nodoArbolPelicula * PeliPorVer=inicArbol();
                 stPelisVistas NuevaPeliculaVista;
-                nodoListaPelicula * NuevaPeliVista=inicLista();
+                nodoListaPelicula * NuevaPeliVistaLis=inicLista();
                 stPelicula NuevaPeliPorVer;
                 int id_peliEliminarVistos;
 
@@ -355,8 +355,8 @@ int main()
                         NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
                         cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
                         NuevaPeliPorVer=PeliPorVer->p;
-                        NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
-                        ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
+                        NuevaPeliVistaLis=crearNodoListaPelicula(NuevaPeliPorVer);
+                        ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVistaLis);
                     }
                     else
                     {
@@ -410,7 +410,7 @@ int main()
                     fflush(stdin);
                     scanf("%d", &id_peliEliminarVistos);
                     ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis= borrarNodo(id_peliEliminarVistos,ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis);
-                    /// falta como borrarlo del archivo ya que el usuario seria como que no vio esa pelicula
+
                     EliminarPeliVistaArchivo(nombre_archivo_PelisVistas,id_Usuario_Logueado,id_peliEliminarVistos);
                     system("pause");
                     system("cls");
@@ -503,7 +503,7 @@ int main()
                         printf("3.MODIFICAR \n");
                         printf("4.CONSULTA \n");
                         printf("5.LISTADOS \n");
-                        printf("6. BORRARNODO  \n");
+                        printf("6. BORRAR PELI \n");
                         printf("7. VOLVER \n");
                         printf("ELIJA UNA OPCION \n");
 
@@ -603,7 +603,7 @@ int main()
                             printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
                             fflush(stdin);
                             scanf("%d", &Id_Peli_BORRAR);
-                            PELI_BORRAR=borrarUnNodoArbol(Id_Peli_BORRAR,ArbolDePeliculas);
+                            PELI_BORRAR=borrarNodoArbol(ArbolDePeliculas,Id_Peli_BORRAR);
                             if(PELI_BORRAR!=NULL)
                             {
                                 printf(" \nPelicula Borrada \n ");
@@ -611,6 +611,9 @@ int main()
                             system("pause");
                             system("cls");
                             break;
+
+
+
                         case 7: /// Vuelve al menu anterior
 
                             continuarOpcionesAdminPeliculas= 'n';
@@ -1186,64 +1189,68 @@ void Recorriendo_postorder (nodoArbolPelicula * arbol)
 }
 //borrarUnNodoArbol (buscarlo por idPelicula)
 //auxiliares
-nodoArbolPelicula * buscar_nodo_mas_derech(nodoArbolPelicula*arbol)
+nodoArbolPelicula * borrarNodoArbol (nodoArbolPelicula * arbol, int dato)
 {
-    nodoArbolPelicula *res;
-    if(arbol->der)
-    {
-        res=buscar_nodo_mas_derech(arbol->der);
-    }
-    return res;
-}
-nodoArbolPelicula * buscar_nodo_mas_izqu(nodoArbolPelicula*arbol)
-{
-    nodoArbolPelicula *res;
-    if(arbol->izq)
-    {
-        res=buscar_nodo_mas_izqu(arbol->izq);
-    }
-    return res;
-}
+    nodoArbolPelicula * masDer;
+    nodoArbolPelicula * masIzq;
+    inicArbol(masDer);
+    inicArbol(masIzq);
 
-nodoArbolPelicula * borrarUnNodoArbol (int dato, nodoArbolPelicula* arbol) /// el dato es el id de la pelicula por borrar
-{
-    if ( arbol!=NULL )
+    if (arbol != NULL)
     {
-        if (dato==arbol->p.idPelicula)
+        if (dato == arbol->p.idPelicula)
         {
-            if(arbol->izq!=NULL)
+            if (arbol->izq != NULL)
             {
-                nodoArbolPelicula *MasDer= buscar_nodo_mas_derech(arbol->izq);
-                arbol->p=MasDer->p;
-                arbol->izq=borrarUnNodoArbol(MasDer->p.idPelicula,arbol->izq);
+                masDer = NMD(arbol->izq);
+                arbol ->p = masDer->p;
+                arbol ->izq = borrarNodoArbol(arbol->izq, masDer->p.idPelicula);
+            }
+            else if (arbol->der != NULL)
+            {
+                masIzq = NMI(arbol->der);
+                arbol ->p = masIzq->p;
+                arbol ->der = borrarNodoArbol(arbol->der, masIzq->p.idPelicula);
             }
             else
             {
-                if (arbol->der!=NULL)
-                {
-                    nodoArbolPelicula* masIzq= buscar_nodo_mas_izqu(arbol->der);
-                    arbol->p=masIzq->p;
-                    arbol->der=borrarUnNodoArbol(masIzq->p.idPelicula,arbol->der);
-                }
-                else
-                {
-                    free(arbol);
-                    arbol=NULL;
-                }
+                free(arbol);
+                arbol = NULL;
             }
         }
-        if ( dato>arbol->p.idPelicula)
+        else if (dato > arbol->p.idPelicula)
         {
-            arbol->der=borrarUnNodoArbol(dato,arbol->der);
+            arbol -> der = borrarNodoArbol(arbol->der, dato);
         }
-        if ( dato<arbol->p.idPelicula)
+        else
         {
-            arbol->izq=borrarUnNodoArbol(dato,arbol->izq);
+            arbol->izq = borrarNodoArbol(arbol->izq, dato);
+        }
 
-        }
+    }
+
+    return arbol;
+}
+
+nodoArbolPelicula * NMD (nodoArbolPelicula * arbol)
+{
+    if (arbol->der != NULL)
+    {
+        arbol = NMD(arbol->der);
     }
     return arbol;
 }
+
+nodoArbolPelicula * NMI (nodoArbolPelicula * arbol)
+{
+    if (arbol ->izq != NULL)
+    {
+        arbol = NMI(arbol->izq);
+    }
+
+    return arbol;
+}
+
 nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato)
 {
     nodoArbolPelicula *rta=NULL;
@@ -1373,7 +1380,7 @@ nodoArbolPelicula* ArregloPelisToArbol (int cantidad, nodoArbolPelicula *arbol, 
             {
                 arbol=insertarNodoArbol(arbol,pelis[i]);
             }
-            i=i+3;
+            i=i+2;
         }
         for (i=1; i<=(cantidad-1); i++)
         {
@@ -1381,7 +1388,7 @@ nodoArbolPelicula* ArregloPelisToArbol (int cantidad, nodoArbolPelicula *arbol, 
             {
                 arbol=insertarNodoArbol(arbol,pelis[i]);
             }
-            i=i+3;
+            i=i+2;
         }
         for (i=0; i<=(cantidad-1); i++)
         {
@@ -1389,7 +1396,7 @@ nodoArbolPelicula* ArregloPelisToArbol (int cantidad, nodoArbolPelicula *arbol, 
             {
                 arbol=insertarNodoArbol(arbol,pelis[i]);
             }
-            i=i+3;
+            i=i+2;
         }
     }
 
@@ -2055,7 +2062,11 @@ int validacionAdmin(char fileU[])
                 if (strcmpi(pass,contrasenia)==0)
                 {
                     if(aux.admin==1)
+                    {
                         valido=aux.idUsuario;
+                    }
+
+
                 }
             }
         }
