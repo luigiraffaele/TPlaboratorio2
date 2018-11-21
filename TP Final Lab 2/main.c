@@ -171,38 +171,6 @@ stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant);
 int cantidadUsuariosActivosArchivo(char nombre_archivo[]);
 int validacionAdmin(char fileU[]);
 
-nodoArbolPelicula * pasaje (nodoArbolPelicula * arbol, stPelicula * Arreglito, int cantidad)
-{
-
-
-    int medio;
-
-    if (cantidad%2==0)
-    {
-        medio = cantidad/2 ;
-    }
-    else
-    {
-        medio=(cantidad/2)+1;
-    }
-
-    arbol= insertarNodoArbol(arbol,Arreglito[medio]);
-    int i=cantidad-1;
-    while ( i>medio &&i<cantidad)
-    {
-        arbol=insertarNodoArbol(arbol,Arreglito[i]);
-        i--;
-    }
-
-    while ( i>-1)
-    {
-        arbol=insertarNodoArbol(arbol,Arreglito[i]);
-        i--;
-    }
-
-
-    return arbol ;
-}
 int main()
 {
     system("color 80");
@@ -238,17 +206,10 @@ int main()
         stCelda *ArregloCeldasUsuarios =(stCelda*) malloc(sizeof(stCelda)*validos_arreglo_Celdas);
 
         UsuarioDeArchivoAARREGLO(nombre_archivo_user,ArregloCeldasUsuarios);
-
-
-
         /// arbol de peliculas
 
         nodoArbolPelicula* ArbolDePeliculas=inicArbol();
-
-
-
         ArbolDePeliculas=cargarArbolDesdeArchivo(ArbolDePeliculas,nombre_archivo_pelis);
-
 
 
         stUsuario nuevoUsuario; /// usado para el case  3 de registro
@@ -393,7 +354,7 @@ int main()
                     {
                         NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
                         cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
-                        NuevaPeliPorVer=ArbolDePeliculas->p;
+                        NuevaPeliPorVer=PeliPorVer->p;
                         NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
                         ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
                     }
@@ -576,14 +537,16 @@ int main()
                             break;
 
                         case 3: /// modificar peliculas
-                            printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
+                            printf("\n Ingrese el ID de la pelicula que desea Modificar: ");
                             fflush(stdin);
                             scanf("%d", &id_Modif);
 
 
                             PeliModif=buscarPelicula(ArbolDePeliculas,id_Modif);
+
                             modificarPeliculas(ArbolDePeliculas,id_Modif);
-                            sobreEscribirPeliEnArchivo(nombre_archivo_pelis,PeliModif->p);
+                            stPelicula Peli_modif_aux=PeliModif->p;
+                            sobreEscribirPeliEnArchivo(nombre_archivo_pelis,Peli_modif_aux);
                             system("pause");
                             system("cls");
                             break;
@@ -641,9 +604,9 @@ int main()
                             fflush(stdin);
                             scanf("%d", &Id_Peli_BORRAR);
                             PELI_BORRAR=borrarUnNodoArbol(Id_Peli_BORRAR,ArbolDePeliculas);
-                            if ( PELI_BORRAR!=NULL)
+                            if(PELI_BORRAR!=NULL)
                             {
-                                mostrarPelicula(PELI_BORRAR->p);
+                                printf(" \nPelicula Borrada \n ");
                             }
                             system("pause");
                             system("cls");
@@ -909,7 +872,7 @@ void modificarPeliculas(nodoArbolPelicula *arbol,int id)  ///Permite modificar l
             while(continuar == 's')
             {
                 printf("= Modificar Pelicula =\n\n");
-                mostrarPeliculaConNumeros(aux);
+                mostrarPeliculaConNumeros(aux1->p);
                 printf("Opcion: ");
                 scanf("%i",&opcion);
 
@@ -1453,18 +1416,17 @@ int buscarUsuario(stCelda adl[],int id,int cant)
     int i = 0;
     int flag = 0;
 
-    while(adl[i].usr.idUsuario != id)
+    while(adl[i].usr.idUsuario != id  && flag !=1 && i<cant)
     {
         i++;
         if(adl[i].usr.idUsuario == id)
         {
             flag = 1;
         }
-
-        if(flag == 0)
-        {
-            i=-1;
-        }
+    }
+    if(cant==i)
+    {
+        i=-1;
     }
     return i;
 }
@@ -1690,7 +1652,7 @@ void cargaUsuarioArchivo ( char nombre_archivo[], stUsuario nuevo) ///Carga una 
     }
 }
 
-void modificarUsuario(stUsuario *aux) ///Permite modificar el contenido de cada campo del usuario
+void modificarUsuario(stCelda aux[], int pos)
 {
     int flag = 0;
     int opcion;
@@ -1698,13 +1660,12 @@ void modificarUsuario(stUsuario *aux) ///Permite modificar el contenido de cada 
     char temp[11]; ///cambie 10por11
     int auxMatrix[2][5];
 
-
-
+    stUsuario auxiliar=aux[pos].usr;
 
     while(continuar == 's')
     {
         printf("= Modificar Usuario =\n\n");
-        mostrarUsuarioConNumeros(*aux);
+        mostrarUsuarioConNumeros(auxiliar);
         printf("Opcion: ");
         scanf("%i",&opcion);
 
@@ -1713,35 +1674,35 @@ void modificarUsuario(stUsuario *aux) ///Permite modificar el contenido de cada 
         case 1:
             printf("Nombre: ");
             fflush(stdin);
-            gets(&aux->nombreUsuario);
+            gets(&auxiliar.nombreUsuario);
             break;
         case 2:
             printf("Pass (10 caracteres): ");
             fflush(stdin);
             gets(&temp);
             pasarContraseniaAMatrix(temp,auxMatrix);
-            encriptarContrasenia(auxMatrix,aux->pass);
+            encriptarContrasenia(auxMatrix,auxiliar.pass);
 
             break;
         case 3:
             printf("Genero: ");
             fflush(stdin);
-            gets(&aux->genero);
+            auxiliar.genero=getch();
             break;
         case 4:
             printf("Nacimiento: ");
-            scanf("%i",&aux->anioNacimiento);
+            scanf("%i",&auxiliar.anioNacimiento);
             break;
         case 5:
             printf("Pais: ");
             fflush(stdin);
-            gets(&aux->pais);
+            gets(&auxiliar.pais);
             break;
 
         case 6:
             printf("Admin: 0:No 1:Si ");
             fflush(stdin);
-            scanf("%d",&aux->admin);
+            scanf("%d",&auxiliar.admin);
             break;
 
         }
@@ -1749,6 +1710,8 @@ void modificarUsuario(stUsuario *aux) ///Permite modificar el contenido de cada 
         fflush(stdin);
         scanf("%c",&continuar);
         system("cls");
+        printf( "LLEGO");
+        aux[pos].usr=auxiliar;
     }
 
 }
@@ -2018,13 +1981,17 @@ int validacionUser(char fileU[])
 
     FILE*archi = NULL;
     archi = fopen(fileU,"rb");
-    if(archi != NULL){
-        while(control>0 && valido<0){
+    if(archi != NULL)
+    {
+        while(control>0 && valido<0)
+        {
             control = fread(&aux,sizeof(stUsuario),1,archi);
-            if(strcmpi(aux.nombreUsuario,username)==0){
+            if(strcmpi(aux.nombreUsuario,username)==0)
+            {
                 desencriptarContrasenia(aux.pass,passMatrix);
                 pasarMatrixAString(pass,passMatrix);
-                if (strcmpi(pass,contrasenia)==0){
+                if (strcmpi(pass,contrasenia)==0)
+                {
                     valido=aux.idUsuario;
                 }
             }
@@ -2075,15 +2042,19 @@ int validacionAdmin(char fileU[])
 
     FILE*archi = NULL;
     archi = fopen(fileU,"rb");
-    if(archi != NULL){
-        while(control>0 && valido<0){
+    if(archi != NULL)
+    {
+        while(control>0 && valido<0)
+        {
             control = fread(&aux,sizeof(stUsuario),1,archi);
-            if(strcmpi(aux.nombreUsuario,username)==0){
+            if(strcmpi(aux.nombreUsuario,username)==0)
+            {
                 desencriptarContrasenia(aux.pass,passMatrix);
                 pasarMatrixAString(pass,passMatrix);
-                if (strcmpi(pass,contrasenia)==0){
+                if (strcmpi(pass,contrasenia)==0)
+                {
                     if(aux.admin==1)
-                    valido=aux.idUsuario;
+                        valido=aux.idUsuario;
                 }
             }
         }
