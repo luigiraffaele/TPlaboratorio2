@@ -137,7 +137,7 @@ nodoArbolPelicula *buscarPelicula (nodoArbolPelicula* arbol, int dato); /// busc
 //auxiliar
 int cantidadPelisArchivo( char nombre_archivo[]); /// cantidad de peliculas en el archivo
 int ArchivoAArreglo ( char archivo[],stPelicula arreglito[]); /// De archivo de pelis al arreglo de pelis aux
-nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[]); ///Del arreglo de Pelis aux al arbol
+nodoArbolPelicula* ArregloPelisToArbol (int cantidad, nodoArbolPelicula *arbol, stPelicula pelis[]); ///Del arreglo de Pelis aux al arbol
 nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo_pelis[]);
 ///----------------------------FUNCIONES DE PELIS VISTAS---------------------------------------------
 
@@ -169,6 +169,7 @@ void  UsuarioDeArchivoAARREGLO ( char nombre_archivo[], stCelda *arregloDeUsuari
 int validacionUser(stCelda adl[],int cant);
 stUsuario buscarUsuarioPorNombre(stCelda adl[],char nombre[],int cant);
 int cantidadUsuariosActivosArchivo(char nombre_archivo[]);
+int validacionAdmin(stCelda adl[],int cant);
 
 nodoArbolPelicula * pasaje (nodoArbolPelicula * arbol, stPelicula * Arreglito, int cantidad)
 {
@@ -277,189 +278,191 @@ int main()
             {
                 id_Usuario_Logueado = validacionUser(ArregloCeldasUsuarios,validos_arreglo_Celdas);
             }
-            if(id_Usuario_Logueado != -1)
 
+            while(continuarOpcionesUser=='s')
             {
-                while(continuarOpcionesUser=='s')
+
+                ///reseteamos las variables para poder utilizar la funcion volver en el switch
+                continuarOpcionesAdmin ='s';
+                continuarOpcionesAdminPeliculas ='s';
+                continuarOpcionesAdminUsers ='s';
+                continuarOpcionesUser ='s';
+
+
+                int posicion_Usuario_Log;
+                // posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
+                int Eleccion_Orden_De_Vista_Pelis;
+                int ID_peliAVer;
+                nodoArbolPelicula * PeliPorVer=inicArbol();
+                stPelisVistas NuevaPeliculaVista;
+                nodoListaPelicula * NuevaPeliVista=inicLista();
+                stPelicula NuevaPeliPorVer;
+                int id_peliEliminarVistos;
+
+
+
+                nodoArbolPelicula * Aux_Recom=inicArbol();
+                int valor;
+                srand(time(NULL));
+
+                int canti_Rec=0;
+                int id_Rec1=0;
+                int id_Rec2=0;
+
+
+
+                printf("1.PERFIL \n");
+
+                printf("2.PELICULAS \n");
+
+                printf("3.VER \n");
+
+                printf("4.RECOMENDACIONES \n");
+
+                printf("5.HISTORIAL \n");
+
+                printf( "6. BORRAR PELI VISTA \n");
+
+                printf("7.SALIR \n");
+
+                printf("ELIJA OPCION \n");
+
+                scanf("%d",&respuestaOpcionesUser);
+
+                system("cls");
+
+                switch(respuestaOpcionesUser)
                 {
 
-                    ///reseteamos las variables para poder utilizar la funcion volver en el switch
-                    continuarOpcionesAdmin ='s';
-                    continuarOpcionesAdminPeliculas ='s';
-                    continuarOpcionesAdminUsers ='s';
-                    continuarOpcionesUser ='s';
+                case 1: ///PERFIL
+
+                    ///IMPRIME INFORMACION DEL USUARIO
+
+                    mostrarUsuario(ArregloCeldasUsuarios[posicion_Usuario_Log]);
 
 
-                    int posicion_Usuario_Log;
-                    // posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
-                    int Eleccion_Orden_De_Vista_Pelis;
-                    int ID_peliAVer;
-                    nodoArbolPelicula * PeliPorVer=inicArbol();
-                    stPelisVistas NuevaPeliculaVista;
-                    nodoListaPelicula * NuevaPeliVista=inicLista();
-                    stPelicula NuevaPeliPorVer;
-                    int id_peliEliminarVistos;
-
-
-
-                    nodoArbolPelicula * Aux_Recom=inicArbol();
-                    int valor;
-                    srand(time(NULL));
-
-                    int canti_Rec=0;
-                    int id_Rec1=0;
-                    int id_Rec2=0;
-
-
-
-                    printf("1.PERFIL \n");
-
-                    printf("2.PELICULAS \n");
-
-                    printf("3.VER \n");
-
-                    printf("4.RECOMENDACIONES \n");
-
-                    printf("5.HISTORIAL \n");
-
-                    printf( "6. BORRAR PELI VISTA");
-
-                    printf("7.SALIR \n");
-
-                    printf("ELIJA OPCION \n");
-
-                    scanf("%d",&respuestaOpcionesUser);
-
+                    system("pause");
                     system("cls");
 
-                    switch(respuestaOpcionesUser)
+                    break;
+
+                case 2: ///PELICULAS
+
+                    ///SWITCH CON 3 OPCIONES preorder , inorder y postorder LUEGO MUESTRA LAS PELICULAS ORDENADAS
+                    printf("\n Como desea ver el listado?: 1. [Preorder] 2.[Inorder] 3. [Postorder]: ");
+                    fflush(stdin);
+                    scanf("%d",&Eleccion_Orden_De_Vista_Pelis);
+                    switch(Eleccion_Orden_De_Vista_Pelis)
+                    {
+                    case 1:
+                        Recorriendo_preorder(ArbolDePeliculas);
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    case 2:
+                        Recorriendo_inorder(ArbolDePeliculas);
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    case 3:
+                        Recorriendo_postorder(ArbolDePeliculas);
+                        system("pause");
+                        system("cls");
+                        break;
+
+                    default:
+                        printf("\n Opcion invalida\n");
+
+                        break;
+
+                    }
+
+                    break;
+
+                case 3: /// VER
+                    printf("\n Ingrese el ID de la pelicula que desea ver: ");
+                    fflush(stdin);
+                    scanf("%d", &ID_peliAVer);
+                    PeliPorVer=buscarPelicula(ArbolDePeliculas,ID_peliAVer);
+                    if(PeliPorVer!=NULL && PeliPorVer->p.eliminado==0) /// si la pelicula llega a estar eliminada no la puede ver
+                    {
+                        NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
+                        cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
+                        NuevaPeliPorVer=ArbolDePeliculas->p;
+                        NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
+                        ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
+                    }
+                    else
+                    {
+                        printf("Pelicula No disponible ");
+                    }
+                    system("pause");
+                    system("cls");
+                    break;
+
+                case 4: /// RECOMENDACIONES
+
+                    while (canti_Rec<3)
                     {
 
-                    case 1: ///PERFIL
-
-                        ///IMPRIME INFORMACION DEL USUARIO
-
-                        mostrarUsuario(ArregloCeldasUsuarios[posicion_Usuario_Log]);
-
-
-                        system("pause");
-                        system("cls");
-
-                        break;
-
-                    case 2: ///PELICULAS
-
-                        ///SWITCH CON 3 OPCIONES preorder , inorder y postorder LUEGO MUESTRA LAS PELICULAS ORDENADAS
-                        printf("\n Como desea ver el listado?: 1. [Preorder] 2.[Inorder] 3. [Postorder]: ");
-                        fflush(stdin);
-                        scanf("%d",&Eleccion_Orden_De_Vista_Pelis);
-                        switch(Eleccion_Orden_De_Vista_Pelis)
+                        if(canti_Rec==1)
                         {
-                        case 1:
-                            Recorriendo_preorder(ArbolDePeliculas);
-                            system("pause");
-                            system("cls");
-                            break;
+                            id_Rec1=Aux_Recom->p.idPelicula;
+                        }
+                        if (canti_Rec==2)
+                        {
+                            id_Rec2=Aux_Recom->p.idPelicula;
+                        }
+                        valor=rand()%cantidadPelisArchivo(nombre_archivo_pelis);
+                        Aux_Recom=buscarPelicula(ArbolDePeliculas,valor);
 
-                        case 2:
-                            Recorriendo_inorder(ArbolDePeliculas);
-                            system("pause");
-                            system("cls");
-                            break;
-
-                        case 3:
-                            Recorriendo_postorder(ArbolDePeliculas);
-                            system("pause");
-                            system("cls");
-                            break;
-
-                        default:
-                            printf("\n Opcion invalida\n");
-
-                            break;
+                        if ( Aux_Recom->p.eliminado==0)
+                        {
+                            mostrarPelicula(Aux_Recom->p);
+                            canti_Rec++;
 
                         }
-
-                        break;
-
-                    case 3: /// VER
-                        printf("\n Ingrese el ID de la pelicula que desea ver: ");
-                        fflush(stdin);
-                        scanf("%d", &ID_peliAVer);
-                        PeliPorVer=buscarPelicula(ArbolDePeliculas,ID_peliAVer);
-                        if(PeliPorVer!=NULL && PeliPorVer->p.eliminado==0) /// si la pelicula llega a estar eliminada no la puede ver
-                        {
-                            NuevaPeliculaVista=crearNuevaPeliVista(id_Usuario_Logueado,ID_peliAVer,nombre_archivo_PelisVistas);
-                            cargaPeliVistasArchivo(nombre_archivo_PelisVistas,NuevaPeliculaVista);
-                            NuevaPeliPorVer=ArbolDePeliculas->p;
-                            NuevaPeliVista=crearNodoListaPelicula(NuevaPeliPorVer);
-                            ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis=agregarAlFinal(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,NuevaPeliVista);
-                        }
-                        else
-                        {
-                            printf("Pelicula No disponible ");
-                        }
-                        system("pause");
-                        system("cls");
-                        break;
-
-                    case 4: /// RECOMENDACIONES
-
-                        while (canti_Rec<3)
-                        {
-
-                            if(canti_Rec==1)
-                            {
-                                id_Rec1=Aux_Recom->p.idPelicula;
-                            }
-                            if (canti_Rec==2)
-                            {
-                                id_Rec2=Aux_Recom->p.idPelicula;
-                            }
-                            valor=rand()%cantidadPelisArchivo(nombre_archivo_pelis);
-                            Aux_Recom=buscarPelicula(ArbolDePeliculas,valor);
-
-                            if ( Aux_Recom->p.eliminado==0)
-                            {
-                                mostrarPelicula(Aux_Recom->p);
-                                canti_Rec++;
-
-                            }
-                        }
-
-                        break;
-
-                    case 5: /// HISTORIAL
-
-                        /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
-                        posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
-                        mostrarListaPelisVistas(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,ArbolDePeliculas);
-                        system("pause");
-                        system("cls");
-
-                        break;
-                    case 6: /// ELIMINAR UNA PELI VISTA
-
-                        printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
-                        fflush(stdin);
-                        scanf("%d", &id_peliEliminarVistos);
-                        ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis= borrarNodo(id_peliEliminarVistos,ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis);
-                        /// falta como borrarlo del archivo ya que el usuario seria como que no vio esa pelicula
-                        EliminarPeliVistaArchivo(nombre_archivo_PelisVistas,id_Usuario_Logueado,id_peliEliminarVistos);
-                        system("pause");
-                        system("cls");
-                        break;
-
-                    case 7: /// Vuelve al menu anterior
-
-                        continuarOpcionesUser= 'n';
-                        break;
-                    default:
-                        printf("opcion invalida\n");
-                        break;
                     }
+
+                    system("pause");
+                    system("cls");
+
+                    break;
+
+                case 5: /// HISTORIAL
+
+                    /// IMPRIME HISTORIAL DE PELICULAS VISTAS RECIENTEMENTE
+                    posicion_Usuario_Log=buscarUsuario(ArregloCeldasUsuarios,id_Usuario_Logueado,validos_arreglo_Celdas);
+                    mostrarListaPelisVistas(ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis,ArbolDePeliculas);
+                    system("pause");
+                    system("cls");
+
+                    break;
+                case 6: /// ELIMINAR UNA PELI VISTA
+
+                    printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
+                    fflush(stdin);
+                    scanf("%d", &id_peliEliminarVistos);
+                    ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis= borrarNodo(id_peliEliminarVistos,ArregloCeldasUsuarios[posicion_Usuario_Log].listaPelis);
+                    /// falta como borrarlo del archivo ya que el usuario seria como que no vio esa pelicula
+                    EliminarPeliVistaArchivo(nombre_archivo_PelisVistas,id_Usuario_Logueado,id_peliEliminarVistos);
+                    system("pause");
+                    system("cls");
+                    break;
+
+                case 7: /// Vuelve al menu anterior
+
+                    id_Usuario_Logueado = -1;
+                    continuarOpcionesUser= 'n';
+                    break;
+                default:
+                    printf("opcion invalida\n");
+                    break;
                 }
             }
+
             break;
         ///==================================================================================================
 
@@ -469,11 +472,13 @@ int main()
 
 
 
-            /* while(adminValido == 0)
+            while(id_Usuario_Logueado == -1)
             {
-            adminValido = validacionAdmin();
+                id_Usuario_Logueado = validacionAdmin(ArregloCeldasUsuarios,validos_arreglo_Celdas);
             }
-            if(adminValido == 1) */
+
+            system("pause");
+            system("cls");
 
 
             while(continuarOpcionesAdmin=='s')
@@ -571,8 +576,10 @@ int main()
                             printf("\n Ingrese el ID de la pelicula que desea Eliminar: ");
                             fflush(stdin);
                             scanf("%d", &id_Modif);
-                            modificarPeliculas(ArbolDePeliculas,id_Modif);
+
+
                             PeliModif=buscarPelicula(ArbolDePeliculas,id_Modif);
+                            modificarPeliculas(ArbolDePeliculas,id_Modif);
                             sobreEscribirPeliEnArchivo(nombre_archivo_pelis,PeliModif->p);
                             system("pause");
                             system("cls");
@@ -583,8 +590,7 @@ int main()
                             fflush(stdin);
                             scanf("%d", &id_Peli_Consulta);
                             PeliPorVer=buscarPelicula(ArbolDePeliculas,id_Peli_Consulta);
-
-                            if ( PeliPorVer!=NULL  && PeliPorVer->p.eliminado==0)
+                            if (PeliPorVer!=NULL  && PeliPorVer->p.eliminado==0)
                             {
                                 mostrarPelicula(PeliPorVer->p);
                             }
@@ -1336,14 +1342,14 @@ int ArchivoAArreglo ( char archivo[],stPelicula *arreglito )
     return i;
 }
 
+/*
 
-
-nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula * pelis )
+nodoArbolPelicula* ArregloPelisToArbol (int inic, int fin, int cantidad, nodoArbolPelicula *arbol, stPelicula * pelis )
 {
     int nuevofin=fin;
     int nuevoinic=inic;
     int aux;
-    nodoArbolPelicula * rta;
+
     int medio;
 
     if(cantidad>0)
@@ -1361,28 +1367,65 @@ nodoArbolPelicula* ArregloPelisToArbol ( int inic, int fin, int cantidad, nodoAr
         arbol=insertarNodoArbol(arbol,pelis[medio]);
         cantidad--;
 
-        printf("valor medio %d ", medio);
-        printf("valor cant %d ", cantidad);
-        system("pause");
         nuevofin=medio-1;
         arbol->izq=ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis); // primero para la izquierda)
 
-        printf("valor medio %d ", medio);
-        printf("valor cant %d ", cantidad);
 
         nuevoinic = medio+1;
         nuevofin=fin;
         arbol->der=ArregloPelisToArbol(nuevoinic,nuevofin,medio,arbol,pelis); // ahora a la derecha
 
-        printf("valor medio %d ", medio);
-        printf("valor cant %d ", cantidad);
     }
     else
     {
         arbol=NULL;
     }
-    rta=arbol;
-    return rta;
+    return arbol;
+}
+*/
+nodoArbolPelicula* ArregloPelisToArbol (int cantidad, nodoArbolPelicula *arbol, stPelicula * pelis )
+{
+    int medio;
+    int i=0;
+    if(cantidad>0)
+    {
+        if (cantidad%2==0)
+        {
+            medio = cantidad/2 ;
+        }
+        else
+        {
+            medio=(cantidad/2)+1;
+        }
+        arbol=insertarNodoArbol(arbol,pelis[medio]);
+        cantidad--;
+        for (i=2; i<=(cantidad-1); i++)
+        {
+            if(i!=medio)
+            {
+                arbol=insertarNodoArbol(arbol,pelis[i]);
+            }
+            i=i+3;
+        }
+        for (i=1; i<=(cantidad-1); i++)
+        {
+            if(i!=medio)
+            {
+                arbol=insertarNodoArbol(arbol,pelis[i]);
+            }
+            i=i+3;
+        }
+        for (i=0; i<=(cantidad-1); i++)
+        {
+            if(i!=medio)
+            {
+                arbol=insertarNodoArbol(arbol,pelis[i]);
+            }
+            i=i+3;
+        }
+    }
+
+    return arbol;
 }
 nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nombre_archivo[])
 {
@@ -1392,10 +1435,10 @@ nodoArbolPelicula* cargarArbolDesdeArchivo (nodoArbolPelicula * arbol, char nomb
 
     int validos_arreglo= ArchivoAArreglo(nombre_archivo,arregloAux);
 
- arbol=pasaje(arbol,arregloAux,cant);
+//arbol=pasaje(arbol,arregloAux,cant);
 
 
-    ///arbol=ArregloPelisToArbol(0,--validos_arreglo,validos_arreglo,arbol,arregloAux);
+    arbol=ArregloPelisToArbol(validos_arreglo,arbol,arregloAux);
 
 
 
@@ -2003,3 +2046,33 @@ int cantidadUsuariosActivosArchivo(char nombre_archivo[])
     return a;
 }
 
+int validacionAdmin(stCelda adl[],int cant)
+{
+    char username[30];
+    char contrasenia[11];
+    int valido = -1;
+    char pass[11];
+    int passMatrix[2][5];
+    int control = 1;
+    stUsuario aux;
+
+    system("cls");
+    printf("\n USERNAME: ");
+    fflush(stdin);
+    gets(&username);
+    printf(" PASSWORD: ");
+    fflush(stdin);
+    gets(&contrasenia);
+
+    aux = buscarUsuarioPorNombre(adl,username,cant);
+    if(strcmpi(aux.nombreUsuario,username)==0)
+    {
+        desencriptarContrasenia(aux.pass,passMatrix);
+        pasarMatrixAString(pass,passMatrix);
+        if (strcmpi(pass,contrasenia)==0 && (aux.admin)==1)
+        {
+            valido=aux.idUsuario;
+        }
+    }
+    return valido;
+}
