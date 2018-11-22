@@ -620,6 +620,7 @@ int main()
 
 
 
+
                             break;
 
                         default:
@@ -775,6 +776,7 @@ int main()
 
                 case 3:
                     continuarOpcionesAdmin = 'n';
+                    id_Usuario_Logueado = -1;
                     break;
 
 
